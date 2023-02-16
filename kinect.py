@@ -29,27 +29,39 @@ import numpy as np
 
 import cv2
 
-# Open default device
-device = Device()
 
-# Start the device
-with device.running():
-    # For each received frame...
-    for type_, frame in device:
-        # ...stop only when we get an IR frame
-        if type_ is FrameType.Ir:
-            break
 
-# Outside of the 'with' block, the device has been stopped again
 
-# The received IR frame is in the range 0 -> 65535. Normalise the
-# range to 0 -> 1 and take square root as a simple form of gamma
-# correction.
-ir_image = frame.to_array()
-ir_image /= ir_image.max()
-ir_image = np.sqrt(ir_image)
 
-cv2.imshow('image', 256*ir_image) 
-if cv2.waitKey(10) == 27: 
+
+def get_next_frames(device):
+    # These are the types of the frames we want to capture and the order
+    # they should be returned.
+    required_types = [freenect2.FrameType.Color, freenect2.FrameType.Depth, freenect2.FrameType.Ir]
+    
+    # Store incoming frame in this dictionary keyed by type.
+    frames_by_type = {}
+    
+    for frame_type, frame in device:
+        # Record frame
+        frames_by_type[frame_type] = frame
+        
+        # Try to return a frame for each type. If we get a KeyError, we need to keep capturing
+        try:
+            return [frames_by_type[t] for t in required_types]
+        except KeyError:
+            pass # This is OK, capture the next frame
+
+if __name__ == "__main__":
+    # Open default device
+    device = Device()
+
+    # Start the device
+    with device.running():
+        while True:
+            color, depth, ir = get_next_frames(device)
+            cv2.imshow('color image', color) 
+            if cv2.waitKey(10) == 27: 
+                break
+        
     cv2.destroyAllWindows() 
-
