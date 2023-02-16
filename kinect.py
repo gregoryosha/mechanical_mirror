@@ -22,7 +22,7 @@ to output.jpg.
 
 """
 # Import parts of freenect2 we're going to use
-from freenect2 import Device, FrameType
+import freenect2 as fn2
 
 # We use numpy to process the raw IR frame
 import numpy as np
@@ -37,7 +37,7 @@ import cv2
 def get_next_frames(device):
     # These are the types of the frames we want to capture and the order
     # they should be returned.
-    required_types = [freenect2.FrameType.Color, freenect2.FrameType.Depth, freenect2.FrameType.Ir]
+    required_types = [fn2.FrameType.Color, fn2.FrameType.Depth, fn2.FrameType.Ir]
     
     # Store incoming frame in this dictionary keyed by type.
     frames_by_type = {}
@@ -54,7 +54,7 @@ def get_next_frames(device):
 
 if __name__ == "__main__":
     # Open default device
-    device = Device()
+    device = fn2.Device()
 
     # Start the device
     with device.running():
