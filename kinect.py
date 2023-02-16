@@ -61,6 +61,8 @@ if __name__ == "__main__":
         while True:
             color, depth, ir = get_next_frames(device)
             cv2.imshow('color image', color.to_array()) 
+            cv2.imshow('depth image', depth.to_array())
+            cv2.imshow('IR image', ir.to_array())
             if cv2.waitKey(10) == 27: 
                 break
         
