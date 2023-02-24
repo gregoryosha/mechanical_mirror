@@ -22,7 +22,7 @@ if __name__ == "__main__":
         
         success, frame = cap.read()
         frame_grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  #Convert image to greyscale
-        thresh, frame_black = cv2.threshold(frame_grey, 100, 255, cv2.THRESH_BINARY)
+        thresh, frame_black = cv2.threshold(frame_grey, 150, 255, cv2.THRESH_BINARY)
 
         cv2.imshow("Frame", frame)
         cv2.imshow("Pixelation", pixelate(frame_black))
