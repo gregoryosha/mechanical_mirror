@@ -44,6 +44,8 @@ sudo apt-get install build-essential cmake pkg-config libjpeg-dev libtiff5-dev l
 
 sudo apt-get install python3-opencv
 
+
+
 ___________________Running Software____________
 
 
