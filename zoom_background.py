@@ -24,7 +24,7 @@ def pixelate(img):
 
 
 # For webcam input:
-BG_COLOR = (0, 0, 0) # green screen
+BG_COLOR = (255, 255, 255) # green screen
 cap = cv2.VideoCapture(0)
 prevTime = 0
 with mp_selfie_segmentation.SelfieSegmentation(model_selection=1) as selfie_segmentation:
@@ -63,7 +63,7 @@ with mp_selfie_segmentation.SelfieSegmentation(model_selection=1) as selfie_segm
       bg_image = np.zeros(image.shape, dtype=np.uint8)
       bg_image[:] = BG_COLOR
     blank_fill = np.zeros(image.shape, dtype=np.uint8)
-    blank_fill[:] = (255,255,255)
+    blank_fill[:] = (0,0,0)
     output_image = np.where(condition, blank_fill, bg_image)
     #Get FrameRate
     currTime = time.time()
