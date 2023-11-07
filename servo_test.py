@@ -33,7 +33,7 @@ for n in range(box_num):
 
 while True:
     print("Input servo angle: ")
-    ang = input()
+    ang = int(input())
     for i in range(16):
         for n in range(box_num):
             servo_arr(pca_arr[n].channels[i]).angle = ang
