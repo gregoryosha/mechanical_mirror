@@ -39,15 +39,20 @@ while True:
             try:
                 for n in range(box_num):
                     for i in range(4):
-                        for j in range(4):
-                            servo_arr(pca_arr[n].channels[i*4 + j]).angle = out_ang
+                        for j in range(2):
+                            servo_arr(pca_arr[n].channels[i*4 + j*2]).angle = out_ang
                         time.sleep(0.05)
                 for n in range(box_num):
                     for i in range(4):
-                        for j in range(4):
-                            servo_arr(pca_arr[n].channels[i*4 + j]).angle = in_ang
+                        for j in range(2):
+                            servo_arr(pca_arr[n].channels[i*4 + j*2]).angle = in_ang
                         time.sleep(0.05)
             except:
+                for n in range(box_num):
+                    for i in range(4):
+                        for j in range(2):
+                            servo_arr(pca_arr[n].channels[i*4 + j*2]).angle = in_ang
+                        time.sleep(0.05)
                 break
     else:
         for i in range(16):
