@@ -35,16 +35,20 @@ while True:
     print("Input servo angle: ")
     cmd = input()
     if (cmd == 'wave'):
-        for n in range(box_num):
-            for i in range(4):
-                for j in range(4):
-                    servo_arr(pca_arr[n].channels[i*4 + j]).angle = out_ang
-                time.sleep(0.05)
-        for n in range(box_num):
-            for i in range(4):
-                for j in range(4):
-                    servo_arr(pca_arr[n].channels[i*4 + j]).angle = in_ang
-                time.sleep(0.05)
+        while True:
+            try:
+                for n in range(box_num):
+                    for i in range(4):
+                        for j in range(4):
+                            servo_arr(pca_arr[n].channels[i*4 + j]).angle = out_ang
+                        time.sleep(0.05)
+                for n in range(box_num):
+                    for i in range(4):
+                        for j in range(4):
+                            servo_arr(pca_arr[n].channels[i*4 + j]).angle = in_ang
+                        time.sleep(0.05)
+            except:
+                break
     else:
         for i in range(16):
             for n in range(box_num):
