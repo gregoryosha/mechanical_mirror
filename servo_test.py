@@ -33,7 +33,7 @@ for n in range(box_num):
 
 while True:
     print("Input servo angle: ")
-    cmd = int(input())
+    cmd = input()
     if (cmd == 'wave'):
         for n in range(box_num):
             for i in range(4):
