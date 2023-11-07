@@ -24,7 +24,7 @@ out_ang = 120
 short_sleep = 0.5
 long_sleep = 3
 
-box_num = 3
+box_num = 6
 
 pca_arr = [PCA9685(i2c, address=0x40), PCA9685(i2c, address=0x41), PCA9685(i2c, address=0x42), PCA9685(i2c, address=0x43), PCA9685(i2c, address=0x44), PCA9685(i2c, address=0x45)]
 
