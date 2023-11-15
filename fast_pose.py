@@ -121,15 +121,16 @@ def run(model: str, num_poses: int,
         cv2.putText(current_frame, fps_text, text_location,
                     cv2.FONT_HERSHEY_DUPLEX,
                     font_size, text_color, font_thickness, cv2.LINE_AA)
+        if DETECTION_RESULT:
+            # Draw landmarks.
+            if DETECTION_RESULT.segmentation_masks is not None:
+                segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
+                mask_image = np.zeros(image.shape, dtype=np.uint8)
+                mask_image[:] = mask_color
+                condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
 
-        if DETECTION_RESULT.segmentation_masks is not None:
-            segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
-            mask_image = np.zeros(image.shape, dtype=np.uint8)
-            mask_image[:] = mask_color
-            condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
-
-            visualized_mask = np.where(condition, mask_image, bg_image)
-            current_frame = visualized_mask
+                visualized_mask = np.where(condition, mask_image, bg_image)
+                current_frame = visualized_mask
 
         cv2.imshow('pose_landmarker', current_frame)
 
