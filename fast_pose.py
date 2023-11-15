@@ -71,7 +71,8 @@ def run(model: str, num_poses: int,
     font_thickness = 1
     fps_avg_frame_count = 10
     overlay_alpha = 0.5
-    mask_color = (100, 100, 0)  # cyan
+    mask_color = (0, 0, 0)  # white
+    bg_color = (255, 255, 255)
 
     def save_result(result: vision.PoseLandmarkerResult,
                     unused_output_image: mp.Image, timestamp_ms: int):
@@ -123,32 +124,20 @@ def run(model: str, num_poses: int,
                     cv2.FONT_HERSHEY_DUPLEX,
                     font_size, text_color, font_thickness, cv2.LINE_AA)
 
-        if DETECTION_RESULT:
-            # Draw landmarks.
-            for pose_landmarks in DETECTION_RESULT.pose_landmarks:
-                # Draw the pose landmarks.
-                pose_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
-                pose_landmarks_proto.landmark.extend([
-                    landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y,
-                                                    z=landmark.z) for landmark
-                    in pose_landmarks
-                ])
-                mp_drawing.draw_landmarks(
-                    current_frame,
-                    pose_landmarks_proto,
-                    mp_pose.POSE_CONNECTIONS,
-                    mp_drawing_styles.get_default_pose_landmarks_style())
-
-        if (output_segmentation_masks and DETECTION_RESULT):
+        if (DETECTION_RESULT):
             if DETECTION_RESULT.segmentation_masks is not None:
                 segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
                 mask_image = np.zeros(image.shape, dtype=np.uint8)
                 mask_image[:] = mask_color
                 condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
-                visualized_mask = np.where(condition, mask_image, current_frame)
-                current_frame = cv2.addWeighted(current_frame, overlay_alpha,
-                                                visualized_mask, overlay_alpha,
-                                                0)
+                bg_image = np.zeros(image.shape, dtype=np.uint8)
+                bg_image[:] = bg_color
+
+                visualized_mask = np.where(condition, mask_image, bg_image)
+                # current_frame = cv2.addWeighted(current_frame, overlay_alpha,
+                #                                 visualized_mask, overlay_alpha,
+                #                                 0)
+                current_frame = visualized_mask
 
         cv2.imshow('pose_landmarker', current_frame)
 

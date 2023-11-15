@@ -11,7 +11,7 @@ The Pi 4 is responsible for both processing live video and outputting to servos
 * Install Bazelisk: `go get github.com/bazelbuild/bazelisk`. Move it to bin: `sudo mv ./go/bin/bazelisk /usr/bin/bazel`
 * Install mediapipe: `git clone https://github.com/google/mediapipe.git`
 
-a
+
 
 ## OpenCV
 OpenCV is installed via mediapipe by running the `mediapipe/setup_opencv.sh` file. 
