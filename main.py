@@ -15,7 +15,6 @@
 
 import argparse
 import sys
-import time
 
 import cv2
 import mediapipe as mp
@@ -117,7 +116,8 @@ def run(model: str, num_poses: int,
         min_pose_presence_confidence=min_pose_presence_confidence,
         min_tracking_confidence=min_tracking_confidence,
         output_segmentation_masks=True,
-        result_callback=save_result)
+        #result_callback=save_result)
+    )
     detector = vision.PoseLandmarker.create_from_options(options)
 
     # Continuously capture images from the camera and run inference
