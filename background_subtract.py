@@ -14,17 +14,17 @@ def pixelate(img):
     return output
 
 cap = cv2.VideoCapture(0)
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
-#fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+#kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
+fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 #fgbg = cv2.bgsegm.BackgroundSubtractorGMG()
 #fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=True)
-fgbg = cv2.createBackgroundSubtractorKNN(detectShadows=True)
+#fgbg = cv2.createBackgroundSubtractorKNN(detectShadows=True)
 while True:
     ret, frame = cap.read()
     if frame is None:
         break
     fgmask = fgbg.apply(frame)
-    fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
+    #fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
 
     THRESHHOLD = 150
     thresh, b_w_image = cv2.threshold(fgmask, THRESHHOLD, 255, cv2.THRESH_BINARY)
