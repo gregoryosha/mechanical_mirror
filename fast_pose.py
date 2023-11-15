@@ -38,7 +38,6 @@ DETECTION_RESULT = None
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
         min_pose_presence_confidence: float, min_tracking_confidence: float,
-        output_segmentation_masks: bool,
         camera_id: int, width: int, height: int) -> None:
     """Continuously run inference on images acquired from the camera.
 
@@ -51,8 +50,6 @@ def run(model: str, num_poses: int,
         presence score in the pose landmark detection.
       min_tracking_confidence: The minimum confidence score for the pose
         tracking to be considered successful.
-      output_segmentation_masks: Choose whether to visualize the segmentation
-        mask or not.
       camera_id: The camera id to be passed to OpenCV.
       width: The width of the frame captured from the camera.
       height: The height of the frame captured from the camera.
@@ -70,7 +67,6 @@ def run(model: str, num_poses: int,
     font_size = 1
     font_thickness = 1
     fps_avg_frame_count = 10
-    overlay_alpha = 0.5
     mask_color = (0, 0, 0)  # white
     bg_color = (255, 255, 255)
 
@@ -95,7 +91,7 @@ def run(model: str, num_poses: int,
         min_pose_detection_confidence=min_pose_detection_confidence,
         min_pose_presence_confidence=min_pose_presence_confidence,
         min_tracking_confidence=min_tracking_confidence,
-        output_segmentation_masks=output_segmentation_masks,
+        output_segmentation_masks=True,
         result_callback=save_result)
     detector = vision.PoseLandmarker.create_from_options(options)
 
@@ -119,25 +115,21 @@ def run(model: str, num_poses: int,
         # Show the FPS
         fps_text = 'FPS = {:.1f}'.format(FPS)
         text_location = (left_margin, row_size)
-        current_frame = image
+        bg_image = np.zeros(image.shape, dtype=np.uint8)
+        bg_image[:] = bg_color
+        current_frame = bg_image
         cv2.putText(current_frame, fps_text, text_location,
                     cv2.FONT_HERSHEY_DUPLEX,
                     font_size, text_color, font_thickness, cv2.LINE_AA)
 
-        if (DETECTION_RESULT):
-            if DETECTION_RESULT.segmentation_masks is not None:
-                segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
-                mask_image = np.zeros(image.shape, dtype=np.uint8)
-                mask_image[:] = mask_color
-                condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
-                bg_image = np.zeros(image.shape, dtype=np.uint8)
-                bg_image[:] = bg_color
+        if DETECTION_RESULT.segmentation_masks is not None:
+            segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
+            mask_image = np.zeros(image.shape, dtype=np.uint8)
+            mask_image[:] = mask_color
+            condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
 
-                visualized_mask = np.where(condition, mask_image, bg_image)
-                # current_frame = cv2.addWeighted(current_frame, overlay_alpha,
-                #                                 visualized_mask, overlay_alpha,
-                #                                 0)
-                current_frame = visualized_mask
+            visualized_mask = np.where(condition, mask_image, bg_image)
+            current_frame = visualized_mask
 
         cv2.imshow('pose_landmarker', current_frame)
 
@@ -181,12 +173,6 @@ def main():
              'considered successful.',
         required=False,
         default=0.5)
-    parser.add_argument(
-        '--outputSegmentationMasks',
-        help='Set this if you would also like to visualize the segmentation '
-             'mask.',
-        required=False,
-        action='store_true')
     # Finding the camera ID can be very reliant on platform-dependent methods.
     # One common approach is to use the fact that camera IDs are usually indexed sequentially by the OS, starting from 0.
     # Here, we use OpenCV and create a VideoCapture object for each potential ID with 'cap = cv2.VideoCapture(i)'.
@@ -207,7 +193,6 @@ def main():
 
     run(args.model, int(args.numPoses), args.minPoseDetectionConfidence,
         args.minPosePresenceConfidence, args.minTrackingConfidence,
-        args.outputSegmentationMasks,
         int(args.cameraId), args.frameWidth, args.frameHeight)
 
 
