@@ -54,7 +54,7 @@ def dispay(img, servo_arr, pca_arr):
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     for i in range(24):
         for j in range(4):
-            if (pix_img[i,j,0] == 0):
+            if (pix_img[j,i,0] == 0):
                 ang = OUT_ANG
             else:
                 ang = IN_ANG
