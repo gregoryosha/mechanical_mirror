@@ -59,7 +59,7 @@ def dispay(img, servo_arr, pca_arr):
             else:
                 ang = IN_ANG
             servo_arr(pca_arr[int(i/4)].channels[3 - i%4 + j*4]).angle = ang
-            time.sleep(0.0001)
+        time.sleep(0.001)
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
@@ -158,7 +158,7 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         dispay(current_frame, servo_arr, pca_arr)
-        #cv2.imshow('pose_landmarker', current_frame)
+        cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
         if cv2.waitKey(1) == 27:
