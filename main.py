@@ -59,7 +59,6 @@ def dispay(img, servo_arr, pca_arr):
             else:
                 ang = IN_ANG
             servo_arr(pca_arr[int(i/4)].channels[3 - i%4 + j*4]).angle = ang
-        time.sleep(0.001)
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
