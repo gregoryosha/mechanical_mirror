@@ -33,7 +33,15 @@ mp_drawing_styles = mp.solutions.drawing_styles
 COUNTER, FPS = 0, 0
 START_TIME = time.time()
 DETECTION_RESULT = None
+RESOLUTION = 24
 
+def pixelate(img):
+    w, h = (RESOLUTION, RESOLUTION)
+
+    #Resize input to pixelated size
+    output = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+    print(output[0,0])
+    return output
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
@@ -131,7 +139,7 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-
+        pixelate(current_frame)
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
