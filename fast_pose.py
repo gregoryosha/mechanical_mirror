@@ -40,7 +40,7 @@ def pixelate(img):
 
     #Resize input to pixelated size
     output = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-    print(output[0,0])
+    print(output[0,0,0])
     return output
 
 def run(model: str, num_poses: int,
