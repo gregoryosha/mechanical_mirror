@@ -52,13 +52,13 @@ def dispay(img, servo_arr, pca_arr):
 
     #Resize input to pixelated size
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-    for i in range(w):
+    for i in range(24):
         for j in range(4):
             if (pix_img[i,j,0] == 0):
                 ang = OUT_ANG
             else:
                 ang = IN_ANG
-            servo_arr(pca_arr[int(i/4)].channels[4 - i%4 + j*4]).angle = ang
+            servo_arr(pca_arr[int(i/4)].channels[3 - i%4 + j*4]).angle = ang
             time.sleep(0.0001)
 
 def run(model: str, num_poses: int,
@@ -158,7 +158,7 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         dispay(current_frame, servo_arr, pca_arr)
-        #cv2.imshow('pose_landmarker', current_frame)
+        cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
         if cv2.waitKey(1) == 27:
