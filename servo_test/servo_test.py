@@ -24,12 +24,15 @@ out_ang = 120
 short_sleep = 0.5
 long_sleep = 3
 
-box_num = 6
+BOX_NUM = 12
 
-pca_arr = [PCA9685(i2c, address=0x40), PCA9685(i2c, address=0x41), PCA9685(i2c, address=0x42), PCA9685(i2c, address=0x43), PCA9685(i2c, address=0x44), PCA9685(i2c, address=0x45)]
-
-for n in range(box_num):
+pca_arr = []
+for n in range(BOX_NUM):
+    pca_arr.append(PCA9685(i2c, address= (0x40 + n)))
+for n in range(BOX_NUM):
     pca_arr[n].frequency = 50
+servo_arr = servo.Servo
+
 
 while True:
     print("Input servo angle: ")
@@ -37,18 +40,18 @@ while True:
     if (cmd == 'wave'):
         while True:
             try:
-                for n in range(box_num):
+                for n in range(BOX_NUM):
                     for j in range(4):
                         for i in range(4):
                             servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = out_ang
                         time.sleep(0.1)
-                for n in range(box_num):
+                for n in range(BOX_NUM):
                     for j in range(4):
                         for i in range(4):
                             servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = in_ang
                         time.sleep(0.1)
             except:
-                for n in range(box_num):
+                for n in range(BOX_NUM):
                     for j in range(4):
                         for i in range(4):
                             servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = in_ang
@@ -56,6 +59,6 @@ while True:
                 break
     else:
         for i in range(16):
-            for n in range(box_num):
+            for n in range(BOX_NUM):
                 servo_arr(pca_arr[n].channels[i]).angle = int(cmd)
                 time.sleep(0.0001)
