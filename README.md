@@ -23,6 +23,8 @@ OpenCV is installed via mediapipe by running the `mediapipe/setup_opencv.sh` fil
   ./setup_opencv.sh
   ```
 
+## Useful Commands
+Check i2c connections; `i2cdetect -y 1`
 
 
 
