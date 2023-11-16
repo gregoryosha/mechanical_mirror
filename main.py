@@ -36,7 +36,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
 #Servo Global variables
-BOX_NUM = 6
+BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
 
@@ -52,12 +52,13 @@ def dispay(img, servo_arr, pca_arr):
     #Resize input to pixelated size
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     for i in range(24):
-        for j in range(4):
+        for j in range(8):
             if (pix_img[j,i,0] == 0):
                 ang = OUT_ANG
             else:
                 ang = IN_ANG
-            servo_arr(pca_arr[int(i/4)].channels[3 - i%4 + j*4]).angle = ang
+            box_address = int(i/4) + (6 * int(j/4))
+            servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
@@ -170,12 +171,12 @@ def run(model: str, num_poses: int,
 
 def main():
     i2c = busio.I2C(board.SCL, board.SDA)
-    pca_arr = [PCA9685(i2c, address=0x40), PCA9685(i2c, address=0x41), PCA9685(i2c, address=0x42), PCA9685(i2c, address=0x43), PCA9685(i2c, address=0x44), PCA9685(i2c, address=0x45)]
-    servo_arr = servo.Servo
+    pca_arr = []
+    for n in range(BOX_NUM):
+        pca_arr.append(PCA9685(i2c, address= (0x40 + n)))
     for n in range(BOX_NUM):
         pca_arr[n].frequency = 50
-
-
+    servo_arr = servo.Servo
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
