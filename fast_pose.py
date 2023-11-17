@@ -36,10 +36,13 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def pixelate(img):
+    height, width = img.shape[:2]
     w, h = (RESOLUTION, RESOLUTION)
 
     #Resize input to pixelated size
-    output = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+    temp = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+    output = cv2.resize(temp, (width, height), interpolation=cv2.INTER_NEAREST)
+
     return output
 
 def run(model: str, num_poses: int,
