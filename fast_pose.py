@@ -40,7 +40,6 @@ def pixelate(img):
 
     #Resize input to pixelated size
     output = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-    print(output[0,0,0])
     return output
 
 def run(model: str, num_poses: int,
@@ -65,8 +64,8 @@ def run(model: str, num_poses: int,
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(camera_id)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION)
 
     # Visualization parameters
     row_size = 50  # pixels
@@ -139,7 +138,7 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-        pixelate(current_frame)
+        current_frame = pixelate(current_frame)
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
