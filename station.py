@@ -50,7 +50,7 @@ def send_to_pi(img, ser):
     img_arr = pix_img[:, :, 0]
     # print(f"length: {len(img_arr)}")
     # print(f"width: {len(img_arr[0])}")
-    in_del, out_del = " ", ";"
+    in_del, out_del = " ", "; "
     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + 'q'
 
     # Join the elements into a single string
