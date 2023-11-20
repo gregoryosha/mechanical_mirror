@@ -48,8 +48,8 @@ def send_to_pi(img, ser):
     #Resize input to pixelated size
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     img_arr = pix_img[:, :, 0]
-    print(f"length: f{len(img_arr)}")
-    print(f"length: f{len(img_arr[0])}")
+    print(f"length: {len(img_arr)}")
+    print(f"width: {len(img_arr[0])}")
 
     in_del, out_del = " ", ";"
     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
