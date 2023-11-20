@@ -10,9 +10,12 @@ ser = serial.Serial(
         bytesize=serial.EIGHTBITS,
         timeout=1
 )
-counter=0
-
-while 1:
-        ser.write("Write counter: %d \n"%(counter))
-        time.sleep(1)
-        counter += 1
+def write_read(x): 
+        ser.write(bytes(x, 'utf-8')) 
+        time.sleep(0.05) 
+        data = ser.readline() 
+        return data 
+while True: 
+        num = input("Enter a number: ") # Taking input from user 
+        value = write_read(num) 
+        print(value) # printing the value 
