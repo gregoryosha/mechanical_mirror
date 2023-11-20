@@ -49,7 +49,7 @@ def send_to_pi(img, ser):
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     img_arr = pix_img[:, :, 0]
 
-    in_del, out_del = " ", "; "
+    in_del, out_del = " ", ";"
     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
 
     # Join the elements into a single string
