@@ -12,7 +12,7 @@ ser = serial.Serial(
 print("Starting serial connection... ")
 while True:
         if ser.in_waiting > 0:
-                data = ser.readline()
+                data = ser.read_until(expected='q')
                 data = data.decode("utf-8","ignore")
                 print(data)
                 # img = np.matrix(data)
