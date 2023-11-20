@@ -48,9 +48,8 @@ def send_to_pi(img, ser):
     #Resize input to pixelated size
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     img_arr = pix_img[:, :, 0]
-    print(f"length: {len(img_arr)}")
-    print(f"width: {len(img_arr[0])}")
-
+    # print(f"length: {len(img_arr)}")
+    # print(f"width: {len(img_arr[0])}")
     in_del, out_del = " ", ";"
     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
 
@@ -79,7 +78,7 @@ def run(model: str, num_poses: int,
     ser = serial.Serial(
         port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
-        timeout=0.1
+        timeout=1
     )
 
     # Start capturing video input from the camera
