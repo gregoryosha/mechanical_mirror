@@ -82,6 +82,7 @@ def run(model: str, num_poses: int,
         baudrate = 115200,
         timeout=1
     )
+    ser_count = 0
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(camera_id)
@@ -160,7 +161,10 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-        send_to_pi(current_frame, ser)
+        ser_count += 1
+        if ser_count > 3:
+            send_to_pi(current_frame, ser)
+            ser_count = 0
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
