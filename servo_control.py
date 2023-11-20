@@ -14,6 +14,8 @@ from adafruit_motor import servo
 BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
+FRAME_COUNT = 0
+
 def display(img, servo_arr, pca_arr):
     for i in range(24):
         for j in range(8):
@@ -26,6 +28,7 @@ def display(img, servo_arr, pca_arr):
 
 
 def main():
+    global FRAME_COUNT
     i2c = busio.I2C(board.SCL, board.SDA)
     pca_arr = []
     for n in range(BOX_NUM):
@@ -46,6 +49,8 @@ def main():
                     # print(data)
                     img = np.matrix(data[:-1])
                     display(img, servo_arr, pca_arr)
+                    print(f"frame count: {FRAME_COUNT}")
+                    FRAME_COUNT += 1
 
 if __name__ == '__main__':
     main()

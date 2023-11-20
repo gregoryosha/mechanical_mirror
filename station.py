@@ -37,6 +37,7 @@ BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
 SER_TIME = time.time()
+FRAME_COUNT = 0
 
 
 # Global variables to calculate FPS
@@ -47,6 +48,7 @@ RESOLUTION = 24
 
 def send_to_pi(img, ser):
     global SER_TIME
+    global FRAME_COUNT
     if (time.time() - SER_TIME) > 0.10:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
@@ -63,6 +65,8 @@ def send_to_pi(img, ser):
         ser.write(bytes(flat_matrix, 'utf-8'))    
         ser.flush() 
         # print(f"Waiting: {ser.out_waiting}")
+        FRAME_COUNT += 1
+        print(f"frame: {FRAME_COUNT}")
         SER_TIME = time.time()
 
 def run(model: str, num_poses: int,
