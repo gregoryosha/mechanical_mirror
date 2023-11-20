@@ -55,7 +55,7 @@ def send_to_pi(img, ser):
 
     # Join the elements into a single string
     ser.write(bytes(flat_matrix, 'utf-8'))     
-    ser.flush()
+    print(f"Waiting: {ser.outWaiting()}")
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
