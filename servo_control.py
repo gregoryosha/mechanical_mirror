@@ -53,9 +53,8 @@ def main():
 
                     display(img, servo_arr, pca_arr)
                     # print(f"frame count: {FRAME_COUNT}")
-                    if (ser.in_waiting > 2000):
+                    if (ser.in_waiting == 4095):
                          ser.reset_input_buffer()
-                    time.sleep(0.01)
                     print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
 
