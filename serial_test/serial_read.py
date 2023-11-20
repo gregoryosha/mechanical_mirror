@@ -2,14 +2,20 @@
 import time
 import serial
 
-ser = serial.Serial(
-        port='/dev/ttyAMA0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
-        baudrate = 115200,
-        timeout=0.1
-)
-
 while True:
-        if ser.in_waiting > 0:
-                line = ser.readline()
-                line = line.decode("utf-8","ignore")
-                print(line)
+        try:
+                print("try serial port")
+                port = input()
+                ser = serial.Serial(
+                        port=f'/dev/tty{port}', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+                        baudrate = 115200,
+                        timeout=0.1
+                )
+                while True:
+                        if ser.in_waiting > 0:
+                                line = ser.readline()
+                                line = line.decode("utf-8","ignore")
+                                print(line)
+        except:
+                print("port failed")
+
