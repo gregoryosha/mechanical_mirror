@@ -52,9 +52,7 @@ def main():
                     img = [list(map(int, row.split())) for row in rows]
 
                     display(img, servo_arr, pca_arr)
-                    # print(f"frame count: {FRAME_COUNT}")
-                    if (ser.in_waiting == 4095):
-                         ser.reset_input_buffer()
+                    print(f"frame count: {FRAME_COUNT}")
                     print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
 
