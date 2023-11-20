@@ -3,7 +3,7 @@ import time
 import serial
 import json
 import numpy as np
-
+# Servo control
 ser = serial.Serial(
         port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
