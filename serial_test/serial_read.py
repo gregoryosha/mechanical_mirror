@@ -7,7 +7,7 @@ while True:
                 print("try serial port")
                 port = input()
                 ser = serial.Serial(
-                        port=f'/dev/tty{port}', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+                        port=f'/dev/{port}', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
                         baudrate = 115200,
                         timeout=0.1
                 )
