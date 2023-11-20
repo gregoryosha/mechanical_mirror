@@ -36,6 +36,8 @@ mp_drawing_styles = mp.solutions.drawing_styles
 BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
+SER_TIME = time.time()
+
 
 # Global variables to calculate FPS
 COUNTER, FPS = 0, 0
@@ -44,6 +46,7 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
+    global SER_TIME
     print(time.time() - SER_TIME)
     SER_TIME = time.time()
     # if (time.time() - SER_TIME) > 10:
@@ -180,7 +183,6 @@ def run(model: str, num_poses: int,
 
 
 def main():
-    SER_TIME = time.time()
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
