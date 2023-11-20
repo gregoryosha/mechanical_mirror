@@ -9,6 +9,7 @@ ser = serial.Serial(
         baudrate = 115200,
         timeout=1
 )
+print("Starting serial connection... ")
 while True:
         if ser.in_waiting > 0:
                 data = ser.readline()
