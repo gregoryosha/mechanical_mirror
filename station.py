@@ -36,6 +36,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
+SER_TIME = time.time()
 
 # Global variables to calculate FPS
 COUNTER, FPS = 0, 0
@@ -44,19 +45,24 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
-    w, h = (RESOLUTION, RESOLUTION)
-    #Resize input to pixelated size
-    pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-    img_arr = pix_img[:, :, 0]
-    # print(f"length: {len(img_arr)}")
-    # print(f"width: {len(img_arr[0])}")
-    in_del, out_del = " ", "; "
-    flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + '\n'
+    print(time.time() - SER_TIME)
+    if (time.time() - SER_TIME) > 10:
+        w, h = (RESOLUTION, RESOLUTION)
+        #Resize input to pixelated size
+        pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+        img_arr = pix_img[:, :, 0]
 
-    # Join the elements into a single string
-    ser.write(bytes(flat_matrix, 'utf-8'))    
-    ser.flush() 
-    # print(f"Waiting: {ser.out_waiting}")
+
+        # print(f"length: {len(img_arr)}")
+        # print(f"width: {len(img_arr[0])}")
+        in_del, out_del = " ", "; "
+        flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + '\n'
+
+        # Join the elements into a single string
+        ser.write(bytes(flat_matrix, 'utf-8'))    
+        ser.flush() 
+        # print(f"Waiting: {ser.out_waiting}")
+        SER_TIME = time.time()
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
@@ -161,10 +167,7 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-        ser_count += 1
-        if ser_count > 10:
-            send_to_pi(current_frame, ser)
-            ser_count = 0
+        send_to_pi(current_frame, ser)
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
