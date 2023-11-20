@@ -14,6 +14,6 @@ while True:
         if ser.in_waiting > 0:
                 data = ser.read_until()
                 data = data.decode("utf-8","ignore")
-                print(data)
-                # img = np.matrix(data[:-1])
-                # print(img[0,0])
+                # print(data)
+                img = np.matrix(data[:-1])
+                print(img[0,0])
