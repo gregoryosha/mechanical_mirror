@@ -159,7 +159,7 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         send_to_pi(current_frame, ser)
-        # cv2.imshow('pose_landmarker', current_frame)
+        cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
         if cv2.waitKey(1) == 27:
