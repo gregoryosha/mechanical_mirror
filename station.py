@@ -36,7 +36,6 @@ mp_drawing_styles = mp.solutions.drawing_styles
 BOX_NUM = 12
 IN_ANG = 80
 OUT_ANG = 120
-SER_TIME = time.time()
 
 # Global variables to calculate FPS
 COUNTER, FPS = 0, 0
@@ -181,6 +180,8 @@ def run(model: str, num_poses: int,
 
 
 def main():
+    SER_TIME = time.time()
+
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
