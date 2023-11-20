@@ -47,7 +47,10 @@ def main():
                     data = ser.read_until()
                     data = data.decode("utf-8","ignore")
                     # print(data)
-                    img = np.matrix(data[:-1])
+                    rows = data[:-1].strip().split(';')
+                    # Split each row into elements using spaces as delimiters
+                    img = [list(map(int, row.split())) for row in rows]
+
                     display(img, servo_arr, pca_arr)
                     print(f"frame count: {FRAME_COUNT}")
                     FRAME_COUNT += 1

@@ -1,10 +1,28 @@
-import numpy as np
+def string_to_matrix(input_string):
+    """
+    Converts a string into a 2D matrix.
 
-img_arr = [[1, 2, 3], [4, 5, 6], [7, 8 ,9]]
-in_del, out_del = " ", ";"
-flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
-print(img_arr)
+    Parameters:
+    - input_string (str): The input string containing matrix elements.
 
-img_mod = np.matrix(flat_matrix)
-print(img_mod)
+    Returns:
+    - list: The 2D matrix.
+    """
+    # Split the string into rows using semicolons as delimiters
+    rows = input_string.strip().split(';')
 
+    # Split each row into elements using spaces as delimiters
+    matrix = [list(map(int, row.split())) for row in rows]
+
+    return matrix
+
+
+# Example usage:
+input_str = "1 2 3; 4 5 6; 7 8 9; 10 11 12"
+
+result_matrix = string_to_matrix(input_str)
+
+# Print the result
+print("Resulting 2D matrix:")
+for row in result_matrix:
+    print(row)
