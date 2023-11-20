@@ -46,23 +46,24 @@ RESOLUTION = 24
 
 def send_to_pi(img, ser):
     print(time.time() - SER_TIME)
-    if (time.time() - SER_TIME) > 10:
-        w, h = (RESOLUTION, RESOLUTION)
-        #Resize input to pixelated size
-        pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-        img_arr = pix_img[:, :, 0]
+    SER_TIME = time.time()
+    # if (time.time() - SER_TIME) > 10:
+    #     w, h = (RESOLUTION, RESOLUTION)
+    #     #Resize input to pixelated size
+    #     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+    #     img_arr = pix_img[:, :, 0]
 
 
-        # print(f"length: {len(img_arr)}")
-        # print(f"width: {len(img_arr[0])}")
-        in_del, out_del = " ", "; "
-        flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + '\n'
+    #     # print(f"length: {len(img_arr)}")
+    #     # print(f"width: {len(img_arr[0])}")
+    #     in_del, out_del = " ", "; "
+    #     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + '\n'
 
-        # Join the elements into a single string
-        ser.write(bytes(flat_matrix, 'utf-8'))    
-        ser.flush() 
-        # print(f"Waiting: {ser.out_waiting}")
-        SER_TIME = time.time()
+    #     # Join the elements into a single string
+    #     ser.write(bytes(flat_matrix, 'utf-8'))    
+    #     ser.flush() 
+    #     # print(f"Waiting: {ser.out_waiting}")
+    #     SER_TIME = time.time()
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
