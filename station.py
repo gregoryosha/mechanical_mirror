@@ -49,7 +49,7 @@ RESOLUTION = 24
 def send_to_pi(img, ser):
     global SER_TIME
     global FRAME_COUNT
-    if (time.time() - SER_TIME) > 0.10:
+    if (time.time() - SER_TIME) > 0.5:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
