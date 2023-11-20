@@ -10,3 +10,9 @@ ser = serial.Serial(
         bytesize=serial.EIGHTBITS,
         timeout=1
 )
+
+while True:
+        if ser.in_waiting > 0:
+                line = ser.readline()
+                line = line.decode("utf-8","ignore")
+                print(line)
