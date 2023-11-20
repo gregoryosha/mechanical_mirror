@@ -13,5 +13,6 @@ while True:
         if ser.in_waiting > 0:
                 data = ser.readline()
                 data = data.decode("utf-8","ignore")
-                img = np.matrix(data)
-                print(img[0,0])
+                print(data)
+                # img = np.matrix(data)
+                # print(img[0,0])
