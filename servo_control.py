@@ -15,5 +15,5 @@ while True:
                 data = ser.read_until(expected='q')
                 data = data.decode("utf-8","ignore")
                 # print(data)
-                img = np.matrix(data)
+                img = np.matrix(data[:-1])
                 print(img[0,0])
