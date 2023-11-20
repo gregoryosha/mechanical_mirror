@@ -11,7 +11,6 @@ def write_read(x):
         ser.write(bytes(x, 'utf-8')) 
         time.sleep(0.05) 
         line = ser.readline() 
-        line = line.decode("utf-8","ignore")
 
         return line
 while True: 
