@@ -52,7 +52,8 @@ def main():
                     img = [list(map(int, row.split())) for row in rows]
 
                     display(img, servo_arr, pca_arr)
-                    print(f"frame count: {FRAME_COUNT}")
+                    # print(f"frame count: {FRAME_COUNT}")
+                    print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
 
 if __name__ == '__main__':
