@@ -162,7 +162,7 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         ser_count += 1
-        if ser_count > 3:
+        if ser_count > 20:
             send_to_pi(current_frame, ser)
             ser_count = 0
         cv2.imshow('pose_landmarker', current_frame)
