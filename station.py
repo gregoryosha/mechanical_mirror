@@ -54,7 +54,8 @@ def send_to_pi(img, ser):
     flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
 
     # Join the elements into a single string
-    ser.write(bytes(flat_matrix, 'utf-8'))     
+    ser.write(bytes(flat_matrix, 'utf-8'))    
+    ser.flush() 
     print(f"Waiting: {ser.out_waiting}")
 
 def run(model: str, num_poses: int,
