@@ -2,6 +2,7 @@
 import time
 import serial
 import json
+import numpy as np
 
 ser = serial.Serial(
         port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
@@ -10,7 +11,7 @@ ser = serial.Serial(
 )
 while True:
         if ser.in_waiting > 0:
-                line = ser.readline()
-                line = line.decode("utf-8","ignore")
-                img = json.loads(line)
+                data = ser.readline()
+                data = data.decode("utf-8","ignore")
+                img = np.matrix(data)
                 print(img[0,0])

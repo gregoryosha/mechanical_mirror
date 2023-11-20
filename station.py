@@ -49,12 +49,11 @@ def send_to_pi(img, ser):
     pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
     img_arr = pix_img[:, :, 0]
 
-     # Flatten the matrix and convert each element to a string
-    flat_matrix = [str(element) for row in img_arr for element in row]
+    in_del, out_del = " ", "; "
+    flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr]))
 
     # Join the elements into a single string
-    matrix_string = json.dumps(flat_matrix)
-    ser.write(bytes(matrix_string, 'utf-8'))     
+    ser.write(bytes(flat_matrix, 'utf-8'))     
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,
