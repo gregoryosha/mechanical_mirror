@@ -31,7 +31,7 @@ def main():
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n)))
     for n in range(BOX_NUM):
-        pca_arr[n].frequency = 50
+        pca_arr[n].frequency = 60
     servo_arr = servo.Servo
     ser = serial.Serial(
             port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
