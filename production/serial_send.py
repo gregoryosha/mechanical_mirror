@@ -62,7 +62,7 @@ def encodeStates(states: list[int]) -> bytes:
             # and inserting the new bit
             bit = state > 0
             new_byte = (new_byte << 1) | bit
-        out_bytes += new_byte.to_bytes()
+        out_bytes += new_byte.to_bytes(1)
 
     return out_bytes
 
