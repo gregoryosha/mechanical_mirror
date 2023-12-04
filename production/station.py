@@ -53,21 +53,32 @@ def send_to_pi(img, ser):
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-        img_arr = pix_img[:, :, 0]
-
-
-        # print(f"length: {len(img_arr)}")
-        # print(f"width: {len(img_arr[0])}")
-        in_del, out_del = " ", "; "
-        flat_matrix = str(out_del.join([in_del.join([str(ele) for ele in sub]) for sub in img_arr])) + '\n'
+        img_list = pix_img[:, :, 0].flatten().tolist()
 
         # Join the elements into a single string
-        ser.write(bytes(flat_matrix, 'utf-8'))    
+        ser.write(encodeStates(img_list))    
         ser.flush() 
         # print(f"Waiting: {ser.out_waiting}")
         FRAME_COUNT += 1
         print(f"frame: {FRAME_COUNT}")
         SER_TIME = time.time()
+
+def encodeStates(states: list[int]) -> bytes:
+    out_bytes = b""
+
+    # iterate over indices 0, 8, 16,...
+    for chunk_idx in range(0, len(states), 8):
+        new_byte = 0b0
+
+        # iterate over eight states, starting at chunk_idx
+        for state in states[chunk_idx : chunk_idx + 8]:
+            # insert bit by shifting new_byte over by a bit
+            # and inserting the new bit
+            bit = state > 0
+            new_byte = (new_byte << 1) | bit
+        out_bytes += new_byte.to_bytes()
+
+    return out_bytes
 
 def run(model: str, num_poses: int,
         min_pose_detection_confidence: float,

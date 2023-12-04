@@ -26,6 +26,13 @@ def display(img, servo_arr, pca_arr):
             box_address = int(i/4) + (6 * int(j/4))
             servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
 
+def decodeStates(data: bytes) -> list[int]:
+    out_states = []
+    for byte in data:
+        for i in range(8):
+            bit = (byte >> (7 - i)) & 0b1
+            out_states.append(bit)
+    return out_states
 
 def main():
     global FRAME_COUNT
@@ -45,14 +52,10 @@ def main():
     print("Starting serial connection... ")
     while True:
             if ser.in_waiting > 0:
-                    data = ser.read_until()
-                    data = data.decode("utf-8","ignore")
-                    # print(data)
-                    rows = data[:-1].strip().split(';')
-                    # Split each row into elements using spaces as delimiters
-                    img = [list(map(int, row.split())) for row in rows]
-
-                    display(img, servo_arr, pca_arr)
+                    data = ser(size=72)
+                    img = np.array(decodeStates(data)).reshape(24,24)
+                    print(img)
+                    # display(img, servo_arr, pca_arr)
                     print(f"frame count: {FRAME_COUNT}")
                     print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
