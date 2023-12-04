@@ -52,6 +52,7 @@ def send_to_pi(ser):
         ser.write(encodeStates(img_list))    
         ser.flush()
         SER_TIME = time.time()
+        print(f"frame: {FRAME}")
         FRAME += 1
 
 def encodeStates(states: list[int]) -> bytes:
@@ -80,7 +81,7 @@ def main():
     )
     while True:
         send_to_pi(ser)
-        print(f"frame: {FRAME}")
+        
 
 
 if __name__ == '__main__':
