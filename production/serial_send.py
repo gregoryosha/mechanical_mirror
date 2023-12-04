@@ -34,22 +34,25 @@ mp_drawing_styles = mp.solutions.drawing_styles
 # Global variables to calculate FPS
 COUNTER, FPS = 0, 0
 SER_TIME = time.time()
+FRAME = 0
 DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(ser):
     global SER_TIME
+    global FRAME
     if (time.time() - SER_TIME) > 0.05:
         
         pix_img = np.random.rand(24,24,3)
         pix_img[0,0,0] = 0
-        pix_img[12,12,0] = 0
+        pix_img[1,4,0] = 0
         img_list = pix_img[:, :, 0].flatten().tolist()
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
         ser.flush()
         SER_TIME = time.time()
+        FRAME += 1
 
 def encodeStates(states: list[int]) -> bytes:
     out_bytes = b""
@@ -77,6 +80,7 @@ def main():
     )
     while True:
         send_to_pi(ser)
+        print(f"frame: {FRAME}")
 
 
 if __name__ == '__main__':
