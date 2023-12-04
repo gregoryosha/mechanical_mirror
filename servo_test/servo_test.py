@@ -13,8 +13,8 @@ from adafruit_pca9685 import PCA9685
 #Servo Juice
 from adafruit_motor import servo
 
-# i2c = busio.I2C(board.SCL, board.SDA)
-i2c = busio.I2C()
+i2c = busio.I2C(board.SCL, board.SDA)
+# i2c = busio.I2C()
 
 servo_arr = servo.Servo
 

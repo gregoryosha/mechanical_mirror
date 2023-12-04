@@ -29,8 +29,8 @@ def display(img, servo_arr, pca_arr):
 
 def main():
     global FRAME_COUNT
-    # i2c = busio.I2C(board.SCL, board.SDA)
-    i2c = busio.I2C()
+    i2c = busio.I2C(board.SCL, board.SDA)
+    # i2c = busio.I2C()
     pca_arr = []
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n)))
