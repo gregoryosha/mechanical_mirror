@@ -52,7 +52,7 @@ def main():
     print("Starting serial connection... ")
     while True:
             if ser.in_waiting > 0:
-                    data = ser(size=72)
+                    data = ser.read(size=72)
                     img = np.array(decodeStates(data)).reshape(24,24)
                     print(img)
                     # display(img, servo_arr, pca_arr)
