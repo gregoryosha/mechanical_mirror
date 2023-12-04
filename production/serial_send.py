@@ -42,6 +42,8 @@ def send_to_pi(ser):
     if (time.time() - SER_TIME) > 1:
         
         pix_img = np.random.rand(24,24,3)
+        pix_img[0,0,0] = 0
+        pix_img[12,12,0] = 0
         img_list = pix_img[:, :, 0].flatten().tolist()
 
         # Join the elements into a single string
