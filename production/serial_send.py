@@ -39,7 +39,7 @@ RESOLUTION = 24
 
 def send_to_pi(ser):
     global SER_TIME
-    if (time.time() - SER_TIME) > 1:
+    if (time.time() - SER_TIME) > 0.05:
         
         pix_img = np.random.rand(24,24,3)
         pix_img[0,0,0] = 0
