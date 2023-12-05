@@ -54,8 +54,8 @@ def main():
             if ser.in_waiting > 0:
                     data = ser.read(size=72)
                     img = np.array(decodeStates(data)).reshape(24,24)
-                    print(img)
-                    # display(img, servo_arr, pca_arr)
+                    # print(img)
+                    display(img, servo_arr, pca_arr)
                     print(f"frame count: {FRAME_COUNT}")
                     print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
