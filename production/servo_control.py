@@ -17,9 +17,10 @@ OUT_ANG = 120
 FRAME_COUNT = 0
 
 def display(img, servo_arr, pca_arr):
-    for i in range(24*8):
-        j = int(i/24)
-        if (img[i] == 0):
+    for n in range(24*8):
+        j = int(n/24)
+        i = n%24
+        if (img[n] == 0):
             ang = OUT_ANG
         else:
             ang = IN_ANG
