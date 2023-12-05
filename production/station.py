@@ -80,12 +80,11 @@ def encodeStates(states: list[int]) -> bytes:
 
     return out_bytes
 
-def run(model: str, num_poses: int,
-        min_pose_detection_confidence: float,
-        min_pose_presence_confidence: float, min_tracking_confidence: float,
-        camera_id: int, width: int, height: int) -> None:
+def run(model:str='pose_landmarker.task', num_poses:int=1, 
+        min_pose_detection_confidence:float=0.5,
+        min_pose_presence_confidence:float=0.5, min_tracking_confidence:float=0.5,
+        camera_id:int=0, width:int=1280, height:int=960) -> None:
     """Continuously run inference on images acquired from the camera.
-
   Args:
       model: Name of the pose landmarker model bundle.
       num_poses: Max number of poses that can be detected by the landmarker.
@@ -104,19 +103,15 @@ def run(model: str, num_poses: int,
         baudrate = 115200,
         timeout=1
     )
-    ser_count = 0
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(cv2.CAP_V4L2)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 24)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 24)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION)
 
     # Visualization parameters
     row_size = 50  # pixels
     left_margin = 24  # pixels
-    text_color = (0, 0, 0)  # black
-    font_size = 1
-    font_thickness = 1
     fps_avg_frame_count = 10
     mask_color = (0, 0, 0)  # white
     bg_color = (255, 255, 255)
@@ -170,9 +165,7 @@ def run(model: str, num_poses: int,
         bg_image = np.zeros(image.shape, dtype=np.uint8)
         bg_image[:] = bg_color
         current_frame = bg_image
-        cv2.putText(current_frame, fps_text, text_location,
-                    cv2.FONT_HERSHEY_DUPLEX,
-                    font_size, text_color, font_thickness, cv2.LINE_AA)
+
         if DETECTION_RESULT:
             # Draw landmarks.
             if DETECTION_RESULT.segmentation_masks is not None:
@@ -196,60 +189,9 @@ def run(model: str, num_poses: int,
 
 
 def main():
-
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument(
-        '--model',
-        help='Name of the pose landmarker model bundle.',
-        required=False,
-        default='pose_landmarker.task')
-    parser.add_argument(
-        '--numPoses',
-        help='Max number of poses that can be detected by the landmarker.',
-        required=False,
-        default=1)
-    parser.add_argument(
-        '--minPoseDetectionConfidence',
-        help='The minimum confidence score for pose detection to be considered '
-             'successful.',
-        required=False,
-        default=0.5)
-    parser.add_argument(
-        '--minPosePresenceConfidence',
-        help='The minimum confidence score of pose presence score in the pose '
-             'landmark detection.',
-        required=False,
-        default=0.5)
-    parser.add_argument(
-        '--minTrackingConfidence',
-        help='The minimum confidence score for the pose tracking to be '
-             'considered successful.',
-        required=False,
-        default=0.5)
     # Finding the camera ID can be very reliant on platform-dependent methods.
     # One common approach is to use the fact that camera IDs are usually indexed sequentially by the OS, starting from 0.
-    # Here, we use OpenCV and create a VideoCapture object for each potential ID with 'cap = cv2.VideoCapture(i)'.
-    # If 'cap' is None or not 'cap.isOpened()', it indicates the camera ID is not available.
-    parser.add_argument(
-        '--cameraId', help='Id of camera.', required=False, default=0)
-    parser.add_argument(
-        '--frameWidth',
-        help='Width of frame to capture from camera.',
-        required=False,
-        default=1280)
-    parser.add_argument(
-        '--frameHeight',
-        help='Height of frame to capture from camera.',
-        required=False,
-        default=960)
-    args = parser.parse_args()
-
-
-
-    run(args.model, int(args.numPoses), args.minPoseDetectionConfidence,
-        args.minPosePresenceConfidence, args.minTrackingConfidence,
-        int(args.cameraId), args.frameWidth, args.frameHeight)
+    run(camera_id=0)
 
 
 if __name__ == '__main__':
