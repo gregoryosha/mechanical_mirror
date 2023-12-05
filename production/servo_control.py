@@ -41,7 +41,7 @@ def main():
     # i2c = busio.I2C()
     pca_arr = []
     for n in range(BOX_NUM):
-        pca_arr.append(PCA9685(i2c, address= (0x40 + n)))
+        pca_arr.append(PCA9685(i2c, address= (0x40 + n), reference_clock_speed=25000000))
     for n in range(BOX_NUM):
         pca_arr[n].frequency = 50
     servo_arr = servo.Servo
