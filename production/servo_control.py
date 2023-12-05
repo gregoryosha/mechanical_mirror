@@ -17,14 +17,14 @@ OUT_ANG = 120
 FRAME_COUNT = 0
 
 def display(img, servo_arr, pca_arr):
-    for i in range(24):
-        for j in range(8):
-            if (img[j][i] == 0):
-                ang = OUT_ANG
-            else:
-                ang = IN_ANG
-            box_address = int(i/4) + (6 * int(j/4))
-            servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+    for i in range(24*8):
+        j = int(i/24)
+        if (img[i] == 0):
+            ang = OUT_ANG
+        else:
+            ang = IN_ANG
+        box_address = int(i/4) + (6 * int(j/4))
+        servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
@@ -53,7 +53,7 @@ def main():
     while True:
             if ser.in_waiting > 0:
                     data = ser.read(size=72)
-                    img = np.array(decodeStates(data)).reshape(24,24)
+                    img = decodeStates(data)
                     # print(img)
                     display(img, servo_arr, pca_arr)
                     print(f"frame count: {FRAME_COUNT}")
