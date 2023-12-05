@@ -107,7 +107,7 @@ def run(model: str, num_poses: int,
     ser_count = 0
 
     # Start capturing video input from the camera
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(camera_id)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 24)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 24)
 
