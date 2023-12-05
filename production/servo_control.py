@@ -11,15 +11,16 @@ from adafruit_motor import servo
 
 
 #Servo Global variables
-BOX_NUM = 12
+ROW_INDEX = 0 # Change for each pico 0-5
+BOX_NUM = 6 # constant for picos addressing a single row
 IN_ANG = 80
 OUT_ANG = 120
-FRAME_COUNT = 0
+FRAME_COUNT = 0 #Used for debugging 
 
-def display(img, servo_arr, pca_arr):
+def display(img, servo_arr, pca_arr) -> None:
     for n in range(24*8):
-        j = int(n/24)
-        i = n%24
+        j = n//24 #height pixel
+        i = n%24 #width pixel
         if (img[n] == 0):
             ang = OUT_ANG
         else:
@@ -37,28 +38,29 @@ def decodeStates(data: bytes) -> list[int]:
 
 def main():
     global FRAME_COUNT
-    i2c = busio.I2C(board.SCL, board.SDA)
+    i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
-    pca_arr = []
-    for n in range(BOX_NUM):
-        pca_arr.append(PCA9685(i2c, address= (0x40 + n), reference_clock_speed=25000000))
-    for n in range(BOX_NUM):
-        pca_arr[n].frequency = 50
-    servo_arr = servo.Servo
     ser = serial.Serial(
             port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
             baudrate = 115200,
             timeout=1
     )
     print("Starting serial connection... ")
+
+    pca_arr = []
+    for n in range(BOX_NUM):
+        pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
+        pca_arr[n].frequency = 50
+    servo_arr = servo.Servo
+    print("Servo shields initialized... ")
+    
     while True:
             if ser.in_waiting > 0:
-                    data = ser.read(size=72)
+                    data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
-                    # print(img)
                     display(img, servo_arr, pca_arr)
-                    print(f"frame count: {FRAME_COUNT}")
-                    print(f"Buffer size: {ser.in_waiting}")
+                    # print(f"frame count: {FRAME_COUNT}")
+                    # print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
 
 if __name__ == '__main__':
