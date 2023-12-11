@@ -105,7 +105,7 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
     )
 
     # Start capturing video input from the camera cv2.CAP_V4L2
-    cap = cv2.VideoCapture(camera_id)
+    cap = cv2.VideoCapture(-1, cv2.CAP_V4L2)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION)
 
