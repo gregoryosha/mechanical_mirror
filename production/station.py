@@ -99,7 +99,7 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
       height: The height of the frame captured from the camera.
   """
     ser = serial.Serial(
-        port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+        port='/dev/ttyACM0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
         timeout=1
     )
