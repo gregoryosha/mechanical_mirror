@@ -177,16 +177,13 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
                     visualized_mask = np.where(condition, mask_image, bg_image)
                     current_frame = visualized_mask
             send_to_pi(current_frame, ser)
-            # cv2.imshow('pose_landmarker', current_frame)
+            cv2.imshow('pose_landmarker', current_frame)
         except:
             break
-            # Stop the program if the ESC key is pressed.
-            # if cv2.waitKey(1) == 27:
-            #     break
 
     detector.close()
     cap.release()
-    # cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 
 def main():
