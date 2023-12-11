@@ -104,8 +104,8 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
         timeout=1
     )
 
-    # Start capturing video input from the camera
-    cap = cv2.VideoCapture(cv2.CAP_V4L2)
+    # Start capturing video input from the camera cv2.CAP_V4L2
+    cap = cv2.VideoCapture(camera_id)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION)
 
@@ -144,48 +144,46 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
 
     # Continuously capture images from the camera and run inference
     while cap.isOpened():
-        success, image = cap.read()
-        if not success:
-            sys.exit(
-                'ERROR: Unable to read from webcam. Please verify your webcam settings.'
-            )
+        try:
+            success, image = cap.read()
+            if not success:
+                sys.exit(
+                    'ERROR: Unable to read from webcam. Please verify your webcam settings.'
+                )
 
-        image = cv2.flip(image, 1)
+            image = cv2.flip(image, 1)
 
-        # Convert the image from BGR to RGB as required by the TFLite model.
-        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
+            # Convert the image from BGR to RGB as required by the TFLite model.
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
 
-        # Run pose landmarker using the model.
-        detector.detect_async(mp_image, time.time_ns() // 1_000_000)
+            # Run pose landmarker using the model.
+            detector.detect_async(mp_image, time.time_ns() // 1_000_000)
 
-        # Show the FPS
-        fps_text = 'FPS = {:.1f}'.format(FPS)
-        text_location = (left_margin, row_size)
-        bg_image = np.zeros(image.shape, dtype=np.uint8)
-        bg_image[:] = bg_color
-        current_frame = bg_image
+            # Show the FPS
+            fps_text = 'FPS = {:.1f}'.format(FPS)
+            text_location = (left_margin, row_size)
+            bg_image = np.zeros(image.shape, dtype=np.uint8)
+            bg_image[:] = bg_color
+            current_frame = bg_image
 
-        if DETECTION_RESULT:
-            # Draw landmarks.
-            if DETECTION_RESULT.segmentation_masks is not None:
-                segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
-                mask_image = np.zeros(image.shape, dtype=np.uint8)
-                mask_image[:] = mask_color
-                condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
+            if DETECTION_RESULT:
+                # Draw landmarks.
+                if DETECTION_RESULT.segmentation_masks is not None:
+                    segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
+                    mask_image = np.zeros(image.shape, dtype=np.uint8)
+                    mask_image[:] = mask_color
+                    condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
 
-                visualized_mask = np.where(condition, mask_image, bg_image)
-                current_frame = visualized_mask
-        send_to_pi(current_frame, ser)
-        cv2.imshow('pose_landmarker', current_frame)
-
-        # Stop the program if the ESC key is pressed.
-        if cv2.waitKey(1) == 27:
+                    visualized_mask = np.where(condition, mask_image, bg_image)
+                    current_frame = visualized_mask
+            send_to_pi(current_frame, ser)
+            # cv2.imshow('pose_landmarker', current_frame)
+        except:
             break
 
     detector.close()
     cap.release()
-    cv2.destroyAllWindows()
 
 
 def main():
