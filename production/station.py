@@ -25,7 +25,6 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from mediapipe.framework.formats import landmark_pb2
 
-import json
 import serial
 
 mp_pose = mp.solutions.pose
@@ -33,7 +32,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
 #Servo Global variables
-BOX_NUM = 12
+BOX_NUM = 6
 IN_ANG = 80
 OUT_ANG = 120
 SER_TIME = time.time()
@@ -49,7 +48,7 @@ RESOLUTION = 24
 def send_to_pi(img, ser):
     global SER_TIME
     global FRAME_COUNT
-    if (time.time() - SER_TIME) > 0.2:
+    if (time.time() - SER_TIME) > 0.15:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
@@ -57,7 +56,7 @@ def send_to_pi(img, ser):
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
-        ser.flush() 
+        #ser.flush() 
         print(f"Waiting: {ser.out_waiting}")
         FRAME_COUNT += 1
         print(f"frame: {FRAME_COUNT}")
@@ -100,7 +99,7 @@ def run(model: str, num_poses: int,
       height: The height of the frame captured from the camera.
   """
     ser = serial.Serial(
-        port='/dev/ttyACM0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+        port='/dev/ttyACM3', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
         timeout=1
     )
@@ -183,7 +182,7 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-        # send_to_pi(current_frame, ser)
+        send_to_pi(current_frame, ser)
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.

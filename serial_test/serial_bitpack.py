@@ -42,10 +42,9 @@ def send_to_pi(ser):
     global SER_TIME
     global FRAME
     if (time.time() - SER_TIME) > 0.05:
-        
         pix_img = np.random.rand(24,24,3)
         pix_img[0,0,0] = 0
-        pix_img[1,4,0] = 0
+        pix_img[1,4,0] = FRAME%2
         img_list = pix_img[:, :, 0].flatten().tolist()
 
         # Join the elements into a single string
@@ -75,7 +74,7 @@ def encodeStates(states: list[int]) -> bytes:
 
 def main():
     ser = serial.Serial(
-        port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+        port='/dev/ttyACM2', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
         timeout=1
     )
