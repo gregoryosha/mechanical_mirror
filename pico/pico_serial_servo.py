@@ -15,6 +15,7 @@ Some boards might require disabling USB endpoints to enable the data port.
 """
 
 import board
+import time
 import usb_cdc
 import busio
 from adafruit_pca9685 import PCA9685
@@ -22,25 +23,29 @@ from adafruit_motor import servo
 
 
 ################################################################
-usb_cdc.data.timeout = 0.1
+
 
 #Servo Global variables
 ROW_INDEX = 0 # Change for each pico 0-5
-BOX_NUM = 6 # constant for picos addressing a single row
+BOX_NUM = 12 # constant for picos addressing a single row
 IN_ANG = 80
 OUT_ANG = 120
-FRAME_COUNT = 0 #Used for debugging 
+FRAME_COUNT = 0 #Used for debugging
 
 def display(img, servo_arr, pca_arr) -> None:
-    for n in range(24*8):
-        j = n//24 #height pixel
-        i = n%24 #width pixel
-        if (img[n] == 0):
-            ang = OUT_ANG
-        else:
-            ang = IN_ANG
-        box_address = int(i/4) + (6 * int(j/4))
-        servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+    try:
+        for n in range(24*8):
+            j = n//24 #height pixel
+            i = n%24 #width pixel
+            if (img[n] == 0):
+                ang = OUT_ANG
+            else:
+                ang = IN_ANG
+            box_address = int(i/4) + (6 * int(j/4))
+            servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+    except:
+        print("out of index error") #test
+        blank = ser.read(ser.in_waiting)
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
@@ -55,6 +60,10 @@ def decodeStates(data: bytes) -> list[int]:
 ################################################################    global FRAME_COUNT
 i2c = busio.I2C(board.GP5, board.GP4) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
 # i2c = busio.I2C()
+ser = usb_cdc.data
+ser.flush()
+ser.reset_input_buffer()
+ser.timeout = 0.1
 print("Starting serial connection... ")
 
 pca_arr = []
@@ -65,10 +74,13 @@ servo_arr = servo.Servo
 print("Servo shields initialized... ")
 
 while True:
-    if usb_cdc.data.in_waiting > 0:
-        data = usb_cdc.data.read(size=72) #data is stored in on/off => 72 bytes
+    if ser.in_waiting > 0:
+        data = ser.read(72) #data is stored in on/off => 72 bytes
         img = decodeStates(data)
         display(img, servo_arr, pca_arr)
-        # print(f"frame count: {FRAME_COUNT}")
-        # print(f"Buffer size: {ser.in_waiting}")
+        if (ser.in_waiting >= 144):
+            blank = ser.read(144)
+            blank = ser.read(72)
+        print(f"frame count: {FRAME_COUNT}")
+        print(f"Buffer size: {ser.in_waiting}")
         FRAME_COUNT += 1
