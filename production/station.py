@@ -174,7 +174,7 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
 
                     visualized_mask = np.where(condition, mask_image, bg_image)
                     current_frame = visualized_mask
-            # send_to_pi(current_frame, ser)
+            send_to_pi(current_frame, ser)
             # cv2.imshow('pose_landmarker', current_frame)
         except:
             break
