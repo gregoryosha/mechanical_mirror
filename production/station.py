@@ -80,11 +80,12 @@ def encodeStates(states: list[int]) -> bytes:
 
     return out_bytes
 
-def run(model:str='pose_landmarker.task', num_poses:int=1, 
-        min_pose_detection_confidence:float=0.5,
-        min_pose_presence_confidence:float=0.5, min_tracking_confidence:float=0.5,
-        camera_id:int=0, width:int=1280, height:int=960) -> None:
+def run(model: str, num_poses: int,
+        min_pose_detection_confidence: float,
+        min_pose_presence_confidence: float, min_tracking_confidence: float,
+        camera_id: int, width: int, height: int) -> None:
     """Continuously run inference on images acquired from the camera.
+
   Args:
       model: Name of the pose landmarker model bundle.
       num_poses: Max number of poses that can be detected by the landmarker.
@@ -100,18 +101,22 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
   """
     ser = serial.Serial(
         port='/dev/ttyACM0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
-        baudrate = 9600,
+        baudrate = 115200,
         timeout=1
     )
+    ser_count = 0
 
-    # Start capturing video input from the camera cv2.CAP_V4L2
-    cap = cv2.VideoCapture(camera_id)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, RESOLUTION)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, RESOLUTION)
+    # Start capturing video input from the camera
+    cap = cv2.VideoCapture(cv2.CAP_V4L2)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 24)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 24)
 
     # Visualization parameters
     row_size = 50  # pixels
     left_margin = 24  # pixels
+    text_color = (0, 0, 0)  # black
+    font_size = 1
+    font_thickness = 1
     fps_avg_frame_count = 10
     mask_color = (0, 0, 0)  # white
     bg_color = (255, 255, 255)
@@ -149,39 +154,36 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
             sys.exit(
                 'ERROR: Unable to read from webcam. Please verify your webcam settings.'
             )
-        try:
-            image = cv2.flip(image, 1)
 
-            # Convert the image from BGR to RGB as required by the TFLite model.
-            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
+        image = cv2.flip(image, 1)
 
-            # Run pose landmarker using the model.
-            detector.detect_async(mp_image, time.time_ns() // 1_000_000)
+        # Convert the image from BGR to RGB as required by the TFLite model.
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_image)
 
-            # Show the FPS
-            bg_image = np.zeros(image.shape, dtype=np.uint8)
-            bg_image[:] = bg_color
-            current_frame = bg_image
+        # Run pose landmarker using the model.
+        detector.detect_async(mp_image, time.time_ns() // 1_000_000)
 
-            if DETECTION_RESULT:
-                print("detected")
-                # Draw landmarks.
-                if DETECTION_RESULT.segmentation_masks is not None:
-                    segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
-                    mask_image = np.zeros(image.shape, dtype=np.uint8)
-                    mask_image[:] = mask_color
-                    condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
+        # Show the FPS
+        bg_image = np.zeros(image.shape, dtype=np.uint8)
+        bg_image[:] = bg_color
+        current_frame = bg_image
+        if DETECTION_RESULT:
+            # Draw landmarks.
+            if DETECTION_RESULT.segmentation_masks is not None:
+                segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
+                mask_image = np.zeros(image.shape, dtype=np.uint8)
+                mask_image[:] = mask_color
+                condition = np.stack((segmentation_mask,) * 3, axis=-1) > 0.1
 
-                    visualized_mask = np.where(condition, mask_image, bg_image)
-                    current_frame = visualized_mask
-            send_to_pi(current_frame, ser)
-            # cv2.imshow('pose_landmarker', current_frame)
-        except:
-            break
-            # Stop the program if the ESC key is pressed.
-            # if cv2.waitKey(1) == 27:
-            #     break
+                visualized_mask = np.where(condition, mask_image, bg_image)
+                current_frame = visualized_mask
+        send_to_pi(current_frame, ser)
+        # cv2.imshow('pose_landmarker', current_frame)
+
+        # Stop the program if the ESC key is pressed.
+        # if cv2.waitKey(1) == 27:
+        #     break
 
     detector.close()
     cap.release()
@@ -189,9 +191,60 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
 
 
 def main():
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '--model',
+        help='Name of the pose landmarker model bundle.',
+        required=False,
+        default='pose_landmarker.task')
+    parser.add_argument(
+        '--numPoses',
+        help='Max number of poses that can be detected by the landmarker.',
+        required=False,
+        default=1)
+    parser.add_argument(
+        '--minPoseDetectionConfidence',
+        help='The minimum confidence score for pose detection to be considered '
+             'successful.',
+        required=False,
+        default=0.5)
+    parser.add_argument(
+        '--minPosePresenceConfidence',
+        help='The minimum confidence score of pose presence score in the pose '
+             'landmark detection.',
+        required=False,
+        default=0.5)
+    parser.add_argument(
+        '--minTrackingConfidence',
+        help='The minimum confidence score for the pose tracking to be '
+             'considered successful.',
+        required=False,
+        default=0.5)
     # Finding the camera ID can be very reliant on platform-dependent methods.
     # One common approach is to use the fact that camera IDs are usually indexed sequentially by the OS, starting from 0.
-    run(camera_id=0)
+    # Here, we use OpenCV and create a VideoCapture object for each potential ID with 'cap = cv2.VideoCapture(i)'.
+    # If 'cap' is None or not 'cap.isOpened()', it indicates the camera ID is not available.
+    parser.add_argument(
+        '--cameraId', help='Id of camera.', required=False, default=0)
+    parser.add_argument(
+        '--frameWidth',
+        help='Width of frame to capture from camera.',
+        required=False,
+        default=1280)
+    parser.add_argument(
+        '--frameHeight',
+        help='Height of frame to capture from camera.',
+        required=False,
+        default=960)
+    args = parser.parse_args()
+
+
+
+    run(args.model, int(args.numPoses), args.minPoseDetectionConfidence,
+        args.minPosePresenceConfidence, args.minTrackingConfidence,
+        int(args.cameraId), args.frameWidth, args.frameHeight)
 
 
 if __name__ == '__main__':
