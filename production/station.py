@@ -165,6 +165,7 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
             current_frame = bg_image
 
             if DETECTION_RESULT:
+                print("detected")
                 # Draw landmarks.
                 if DETECTION_RESULT.segmentation_masks is not None:
                     segmentation_mask = DETECTION_RESULT.segmentation_masks[0].numpy_view()
