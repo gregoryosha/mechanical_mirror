@@ -165,9 +165,14 @@ def run(model: str, num_poses: int,
         detector.detect_async(mp_image, time.time_ns() // 1_000_000)
 
         # Show the FPS
+        fps_text = 'FPS = {:.1f}'.format(FPS)
+        text_location = (left_margin, row_size)
         bg_image = np.zeros(image.shape, dtype=np.uint8)
         bg_image[:] = bg_color
         current_frame = bg_image
+        cv2.putText(current_frame, fps_text, text_location,
+                    cv2.FONT_HERSHEY_DUPLEX,
+                    font_size, text_color, font_thickness, cv2.LINE_AA)
         if DETECTION_RESULT:
             # Draw landmarks.
             if DETECTION_RESULT.segmentation_masks is not None:
@@ -178,12 +183,12 @@ def run(model: str, num_poses: int,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
-        send_to_pi(current_frame, ser)
+        # send_to_pi(current_frame, ser)
         cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
-        # if cv2.waitKey(1) == 27:
-        #     break
+        if cv2.waitKey(1) == 27:
+            break
 
     detector.close()
     cap.release()
