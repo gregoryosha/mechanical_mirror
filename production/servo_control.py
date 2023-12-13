@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import serial
-import numpy as np
 
 import board
 import time
@@ -38,7 +37,7 @@ def decodeStates(data: bytes) -> list[int]:
 
 def main():
     global FRAME_COUNT
-    i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
+    i2c = busio.I2C(board.GP5, board.GP4) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
     ser = serial.Serial(
             port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
