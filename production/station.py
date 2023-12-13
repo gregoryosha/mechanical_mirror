@@ -100,7 +100,7 @@ def run(model:str='pose_landmarker.task', num_poses:int=1,
   """
     ser = serial.Serial(
         port='/dev/ttyACM0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
-        baudrate = 115200,
+        baudrate = 9600,
         timeout=1
     )
 
