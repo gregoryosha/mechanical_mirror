@@ -15,7 +15,7 @@ BOX_NUM = 12 # constant for picos addressing a single row
 IN_ANG = 80
 OUT_ANG = 120
 FRAME_COUNT = 0 #Used for debugging 
-PREV_IMG = [0] * (16 * BOX_NUM)
+PREV_IMG = [0] * 576
 
 def display(img, servo_arr, pca_arr, ser) -> None:
     for n in range(16 * BOX_NUM):
