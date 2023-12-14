@@ -107,8 +107,8 @@ def run(model: str, num_poses: int,
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(cv2.CAP_V4L2)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 24)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 24)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 48)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 48)
 
     # Visualization parameters
     row_size = 50  # pixels
@@ -183,15 +183,15 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         send_to_pi(current_frame, ser)
-        cv2.imshow('pose_landmarker', current_frame)
+        # cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
-        if cv2.waitKey(1) == 27:
-            break
+        # if cv2.waitKey(1) == 27:
+        #     break
 
     detector.close()
     cap.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 
 def main():

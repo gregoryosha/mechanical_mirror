@@ -11,21 +11,24 @@ from adafruit_motor import servo
 
 #Servo Global variables
 ROW_INDEX = 0 # Change for each pico 0-5
-BOX_NUM = 6 # constant for picos addressing a single row
+BOX_NUM = 12 # constant for picos addressing a single row
 IN_ANG = 80
 OUT_ANG = 120
 FRAME_COUNT = 0 #Used for debugging 
+PREV_IMG = [0] * (16 * BOX_NUM)
 
 def display(img, servo_arr, pca_arr) -> None:
-    for n in range(24*8):
-        j = n//24 #height pixel
-        i = n%24 #width pixel
-        if (img[n] == 0):
-            ang = OUT_ANG
-        else:
-            ang = IN_ANG
-        box_address = int(i/4) + (6 * int(j/4))
-        servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+    for n in range(16 * BOX_NUM):
+        if (img[n] != PREV_IMG[n]):
+            j = n//24 #height pixel
+            i = n%24 #width pixel
+            if (img[n] == 0):
+                ang = OUT_ANG
+            else:
+                ang = IN_ANG
+            box_address = int(i/4) + (6 * int(j/4))
+            servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+        PREV_IMG[n] = img[n]
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
