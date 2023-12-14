@@ -31,7 +31,7 @@ def display(img, servo_arr, pca_arr) -> None:
                     ang = IN_ANG
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-            PREV_IMG[n] = img[n]
+        PREV_IMG = img
     else:
         print("img size unequal...")
         print(f"image size: {len(img)}")
