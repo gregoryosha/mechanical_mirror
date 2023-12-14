@@ -18,7 +18,7 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 def display(img, servo_arr, pca_arr) -> None:
-    print(img)
+    print(img[3])
     global BOX_NUM
     global PREV_IMG
     # if (len(img) == 576):
