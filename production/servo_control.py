@@ -18,6 +18,8 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 def display(img, servo_arr, pca_arr, ser) -> None:
+    global BOX_NUM
+    global PREV_IMG
     for n in range(16 * BOX_NUM):
         try:
             if (img[n] != PREV_IMG[n]):
