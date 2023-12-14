@@ -18,24 +18,23 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 def display(img, servo_arr, pca_arr) -> None:
-    print(img[3])
     global BOX_NUM
     global PREV_IMG
-    # if (len(img) == 576):
-    #     for n in range(16 * BOX_NUM):
-    #         if (img[n] != PREV_IMG[n]):
-    #             j = n//24 #height pixel
-    #             i = n%24 #width pixel
-    #             if (img[n] == 0):
-    #                 ang = OUT_ANG
-    #             else:
-    #                 ang = IN_ANG
-    #             box_address = int(i/4) + (6 * int(j/4))
-    #             servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-    #     PREV_IMG = img
-    # else:
-    #     print("img size unequal...")
-    #     print(f"image size: {len(img)}")
+    if (len(img) == 576):
+        for n in range(16 * BOX_NUM):
+            if (img[n] != PREV_IMG[n]):
+                j = n//24 #height pixel
+                i = n%24 #width pixel
+                if (img[n] == 0):
+                    ang = OUT_ANG
+                else:
+                    ang = IN_ANG
+                box_address = int(i/4) + (6 * int(j/4))
+                servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+        PREV_IMG = img
+    else:
+        print("img size unequal...")
+        print(f"image size: {len(img)}")
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
