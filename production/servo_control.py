@@ -20,9 +20,11 @@ PREV_IMG = [0] * 576
 def display(img, servo_arr, pca_arr) -> None:
     global BOX_NUM
     global PREV_IMG
-    print(f"image size: {len(img)}")
-    for n in range(16 * BOX_NUM):
-        try:
+    loop = 0
+    #print(f"image size: {len(img)}")
+    try:
+        for n in range(16 * BOX_NUM):
+            loop = n
             if (img[n] != PREV_IMG[n]):
                 j = n//24 #height pixel
                 i = n%24 #width pixel
@@ -32,9 +34,9 @@ def display(img, servo_arr, pca_arr) -> None:
                     ang = IN_ANG
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-        except IndexError:
-             print("index error triggered")
-        PREV_IMG[n] = img[n]
+            PREV_IMG[n] = img[n]
+    except IndexError:
+             print(f"index error triggered, loop num: {loop}")
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
