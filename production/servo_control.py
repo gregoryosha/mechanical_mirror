@@ -20,10 +20,8 @@ PREV_IMG = [0] * 576
 def display(img, servo_arr, pca_arr) -> None:
     global BOX_NUM
     global PREV_IMG
-    loop = 0
-    #print(f"image size: {len(img)}")
+    print(f"image size: {len(img)}")
     for n in range(16 * BOX_NUM):
-        loop = n
         if (img[n] != PREV_IMG[n]):
             j = n//24 #height pixel
             i = n%24 #width pixel
