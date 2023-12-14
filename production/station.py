@@ -99,7 +99,7 @@ def run(model: str, num_poses: int,
       height: The height of the frame captured from the camera.
   """
     ser = serial.Serial(
-        port='/dev/ttyUSB1', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+        port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
         baudrate = 115200,
         timeout=1
     )
