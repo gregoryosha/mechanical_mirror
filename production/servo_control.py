@@ -17,17 +17,20 @@ OUT_ANG = 120
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * (16 * BOX_NUM)
 
-def display(img, servo_arr, pca_arr) -> None:
+def display(img, servo_arr, pca_arr, ser) -> None:
     for n in range(16 * BOX_NUM):
-        if (img[n] != PREV_IMG[n]):
-            j = n//24 #height pixel
-            i = n%24 #width pixel
-            if (img[n] == 0):
-                ang = OUT_ANG
-            else:
-                ang = IN_ANG
-            box_address = int(i/4) + (6 * int(j/4))
-            servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+        try:
+            if (img[n] != PREV_IMG[n]):
+                j = n//24 #height pixel
+                i = n%24 #width pixel
+                if (img[n] == 0):
+                    ang = OUT_ANG
+                else:
+                    ang = IN_ANG
+                box_address = int(i/4) + (6 * int(j/4))
+                servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+        except IndexError:
+             blank = ser.read(size=72)
         PREV_IMG[n] = img[n]
 
 def decodeStates(data: bytes) -> list[int]:
@@ -60,7 +63,7 @@ def main():
             if ser.in_waiting > 0:
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
-                    display(img, servo_arr, pca_arr)
+                    display(img, servo_arr, pca_arr, ser)
                     # print(f"frame count: {FRAME_COUNT}")
                     # print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
