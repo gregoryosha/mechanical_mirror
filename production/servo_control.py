@@ -30,7 +30,7 @@ def display(img, servo_arr, pca_arr, ser) -> None:
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
         except IndexError:
-             blank = ser.read(size=72)
+             print("index error triggered")
         PREV_IMG[n] = img[n]
 
 def decodeStates(data: bytes) -> list[int]:
