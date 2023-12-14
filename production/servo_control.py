@@ -17,9 +17,10 @@ OUT_ANG = 120
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * 576
 
-def display(img, servo_arr, pca_arr, ser) -> None:
+def display(img, servo_arr, pca_arr) -> None:
     global BOX_NUM
     global PREV_IMG
+    print(f"image size: {len(img)}")
     for n in range(16 * BOX_NUM):
         try:
             if (img[n] != PREV_IMG[n]):
@@ -65,7 +66,7 @@ def main():
             if ser.in_waiting > 0:
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
-                    display(img, servo_arr, pca_arr, ser)
+                    display(img, servo_arr, pca_arr)
                     # print(f"frame count: {FRAME_COUNT}")
                     # print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
