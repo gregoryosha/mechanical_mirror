@@ -56,7 +56,7 @@ def send_to_pi(img, ser):
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
-        #ser.flush() 
+        ser.flush() 
         print(f"Waiting: {ser.out_waiting}")
         FRAME_COUNT += 1
         print(f"frame: {FRAME_COUNT}")
