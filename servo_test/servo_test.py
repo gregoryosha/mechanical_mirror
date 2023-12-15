@@ -24,7 +24,7 @@ out_ang = 120
 short_sleep = 0.5
 long_sleep = 3
 
-BOX_NUM = 12
+BOX_NUM = 18
 
 pca_arr = []
 for n in range(BOX_NUM):
