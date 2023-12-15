@@ -61,16 +61,23 @@ def main():
         pca_arr[n].frequency = 50
     servo_arr = servo.Servo
     print("Servo shields initialized... ")
-    
-    while True:
-            if ser.in_waiting > 0:
-                    data = ser.read(size=72) #data is stored in on/off => 72 bytes
-                    img = decodeStates(data)
-                    display(img, servo_arr, pca_arr)
-                    # print(f"frame count: {FRAME_COUNT}")
-                    if (ser.in_waiting > 0):
-                        print(f"Buffer size: {ser.in_waiting}")
-                    FRAME_COUNT += 1
+    try:
+        while True:
+                if ser.in_waiting > 0:
+                        data = ser.read(size=72) #data is stored in on/off => 72 bytes
+                        img = decodeStates(data)
+                        display(img, servo_arr, pca_arr)
+                        # print(f"frame count: {FRAME_COUNT}")
+                        if (ser.in_waiting > 0):
+                            print(f"Buffer size: {ser.in_waiting}")
+                        FRAME_COUNT += 1
+    except KeyboardInterrupt:
+        print("reseting servos...")
+        for n in range(BOX_NUM):
+                for j in range(4):
+                    for i in range(4):
+                        servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
+                    time.sleep(0.1)
 
 if __name__ == '__main__':
     main()
