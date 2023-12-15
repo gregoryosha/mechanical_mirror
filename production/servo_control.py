@@ -68,8 +68,9 @@ def main():
                         img = decodeStates(data)
                         display(img, servo_arr, pca_arr)
                         # print(f"frame count: {FRAME_COUNT}")
-                        if (ser.in_waiting > 0):
+                        if (ser.in_waiting >= 144):
                             print(f"Buffer size: {ser.in_waiting}")
+                            blank = ser.read(144)
                         FRAME_COUNT += 1
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
