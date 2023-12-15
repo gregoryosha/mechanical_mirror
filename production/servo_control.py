@@ -11,7 +11,7 @@ from adafruit_motor import servo
 
 #Servo Global variables
 ROW_INDEX = 0 # Change for each pico 0-5
-BOX_NUM = 12 # constant for picos addressing a single row
+BOX_NUM = 18 # constant for picos addressing a single row
 IN_ANG = 80
 OUT_ANG = 120
 FRAME_COUNT = 0 #Used for debugging 
