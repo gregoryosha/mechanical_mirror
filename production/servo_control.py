@@ -68,7 +68,8 @@ def main():
                     img = decodeStates(data)
                     display(img, servo_arr, pca_arr)
                     # print(f"frame count: {FRAME_COUNT}")
-                    print(f"Buffer size: {ser.in_waiting}")
+                    if (ser.in_waiting > 0):
+                        print(f"Buffer size: {ser.in_waiting}")
                     FRAME_COUNT += 1
 
 if __name__ == '__main__':
