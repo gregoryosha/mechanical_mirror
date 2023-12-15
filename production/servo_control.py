@@ -72,7 +72,7 @@ def main():
                             print(f"Buffer size: {ser.in_waiting}")
                         FRAME_COUNT += 1
     except KeyboardInterrupt:
-        print("reseting servos...")
+        print("Exiting and reseting servos...")
         for n in range(BOX_NUM):
                 for j in range(4):
                     for i in range(4):
