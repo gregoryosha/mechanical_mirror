@@ -32,10 +32,10 @@ def display(img, servo_arr, pca_arr) -> None:
                 try:
                     box_address = int(i/4) + (6 * int(j/4))
                     servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-                except OSError:
-                     print("OSError, frame dropped")
-                except ValueError:
-                     print("overloaded, ValueError")
+                except OSError as report:
+                     print(f"OSError: {report}")
+                except ValueError as report:
+                     print(f"overloaded, ValueError: {report}")
         PREV_IMG = img
     else:
         print("img size unequal...")
