@@ -38,6 +38,7 @@ OUT_ANG = 120
 SER_TIME = time.time()
 FRAME_TIME = 0.20
 FRAME_COUNT = 0
+FIRST_FRAME = True
 
 
 # Global variables to calculate FPS
@@ -47,10 +48,14 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
+    global FIRST_FRAME
     global SER_TIME
     global FRAME_COUNT
     global FRAME_TIME
-    if (time.time() - SER_TIME) > FRAME_TIME:
+    if (FIRST_FRAME):
+        # FRAME_TIME = 0.5
+        FRAME_TIME = False
+    elif (time.time() - SER_TIME) > FRAME_TIME:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)

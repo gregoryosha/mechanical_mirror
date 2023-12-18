@@ -29,8 +29,11 @@ def display(img, servo_arr, pca_arr) -> None:
                     ang = OUT_ANG
                 else:
                     ang = IN_ANG
-                box_address = int(i/4) + (6 * int(j/4))
-                servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+                try:
+                    box_address = int(i/4) + (6 * int(j/4))
+                    servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+                except OSError:
+                     print("OSError, frame dropped")
         PREV_IMG = img
     else:
         print("img size unequal...")
