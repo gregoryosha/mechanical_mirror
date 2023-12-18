@@ -34,6 +34,8 @@ def display(img, servo_arr, pca_arr) -> None:
                     servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
                 except OSError:
                      print("OSError, frame dropped")
+                except ValueError:
+                     print("overloaded, ValueError")
         PREV_IMG = img
     else:
         print("img size unequal...")
@@ -70,7 +72,6 @@ def main():
                         data = ser.read(size=72) #data is stored in on/off => 72 bytes
                         img = decodeStates(data)
                         display(img, servo_arr, pca_arr)
-                        # print(f"frame count: {FRAME_COUNT}")
                         if (ser.in_waiting >= 144):
                             print(f"Buffer size: {ser.in_waiting}")
                             blank = ser.read(144)
