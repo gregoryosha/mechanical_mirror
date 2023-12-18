@@ -36,7 +36,7 @@ BOX_NUM = 6
 IN_ANG = 80
 OUT_ANG = 120
 SER_TIME = time.time()
-FRAME_TIME = 0.15
+FRAME_TIME = 0.2
 FRAME_COUNT = 0
 FIRST_FRAME = True
 
@@ -111,8 +111,8 @@ def run(model: str, num_poses: int,
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(cv2.CAP_V4L2)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 48)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 48)
 
     # Visualization parameters
     row_size = 50  # pixels
