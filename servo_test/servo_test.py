@@ -61,4 +61,4 @@ while True:
         for i in range(16):
             for n in range(BOX_NUM):
                 servo_arr(pca_arr[n].channels[i]).angle = int(cmd)
-                time.sleep(0.0001)
+                time.sleep(0.001)
