@@ -24,7 +24,7 @@ out_ang = 120
 short_sleep = 0.5
 long_sleep = 3
 
-BOX_NUM = 12
+BOX_NUM = 36
 
 pca_arr = []
 for n in range(BOX_NUM):
@@ -61,4 +61,4 @@ while True:
         for i in range(16):
             for n in range(BOX_NUM):
                 servo_arr(pca_arr[n].channels[i]).angle = int(cmd)
-                time.sleep(0.0001)
+                time.sleep(0.005)

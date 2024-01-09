@@ -41,11 +41,10 @@ RESOLUTION = 24
 def send_to_pi(ser):
     global SER_TIME
     global FRAME
-    if (time.time() - SER_TIME) > 0.05:
-        
+    if (time.time() - SER_TIME) > 0.20:
         pix_img = np.random.rand(24,24,3)
-        pix_img[0,0,0] = 0
-        pix_img[1,4,0] = 0
+        pix_img[0,0,0] = 1
+        pix_img[0,3,0] = FRAME%2
         img_list = pix_img[:, :, 0].flatten().tolist()
 
         # Join the elements into a single string

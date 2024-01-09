@@ -25,7 +25,6 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from mediapipe.framework.formats import landmark_pb2
 
-import json
 import serial
 
 mp_pose = mp.solutions.pose
@@ -33,11 +32,13 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
 #Servo Global variables
-BOX_NUM = 12
+BOX_NUM = 6
 IN_ANG = 80
 OUT_ANG = 120
 SER_TIME = time.time()
+FRAME_TIME = 0.2
 FRAME_COUNT = 0
+FIRST_FRAME = True
 
 
 # Global variables to calculate FPS
@@ -47,9 +48,11 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
+    global FIRST_FRAME
     global SER_TIME
     global FRAME_COUNT
-    if (time.time() - SER_TIME) > 0.2:
+    global FRAME_TIME
+    if (time.time() - SER_TIME) > FRAME_TIME:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
@@ -108,8 +111,8 @@ def run(model: str, num_poses: int,
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(cv2.CAP_V4L2)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 24)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 24)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 48)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 48)
 
     # Visualization parameters
     row_size = 50  # pixels
@@ -184,15 +187,15 @@ def run(model: str, num_poses: int,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         send_to_pi(current_frame, ser)
-        cv2.imshow('pose_landmarker', current_frame)
+        # cv2.imshow('pose_landmarker', current_frame)
 
         # Stop the program if the ESC key is pressed.
-        if cv2.waitKey(1) == 27:
-            break
+        # if cv2.waitKey(1) == 27:
+        #     break
 
     detector.close()
     cap.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 
 def main():
