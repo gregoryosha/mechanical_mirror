@@ -13,7 +13,7 @@ def pixelate(img):
 
     #Resize input to pixelated size
     temp = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-    print(temp[0,0,0])
+    # print(temp[0,0,0])
 
 
     #Initialize output image
