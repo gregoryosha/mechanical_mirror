@@ -18,9 +18,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 
 #Servo Global variables
 SER_TIME = time.time()
-FRAME_TIME = 0.3
-FRAME_COUNT = 0
-FIRST_FRAME = True
+FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
 
 
@@ -31,22 +29,28 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
-    global FIRST_FRAME
     global SER_TIME
-    global FRAME_COUNT
     global FRAME_TIME
+    global PREV_IMG
+    
     if (time.time() - SER_TIME) > FRAME_TIME:
-        w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
+        w, h = (RESOLUTION, RESOLUTION)
         pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
         img_list = pix_img[:, :, 0].flatten().tolist()
+
+        change_count = 0
+        for pix, n in enumerate(img_list):
+            if (pix != PREV_IMG[n]):
+                change_count += 1
+
+        FRAME_TIME = change_count * 0.7 / 576 + 0.1
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
         ser.flush() 
         # print(f"Waiting: {ser.out_waiting}")
-        FRAME_COUNT += 1
-        print(f"frame: {FRAME_COUNT}")
+        PREV_IMG = img_list
         SER_TIME = time.time()
 
 def encodeStates(states: list[int]) -> bytes:
