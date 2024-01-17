@@ -13,7 +13,7 @@ from adafruit_motor import servo
 ROW_INDEX = 0 # Change for each pico 0-5
 BOX_NUM = 36 # constant for picos addressing a single row
 IN_ANG = 80
-OUT_ANG = 120
+OUT_ANG = 140
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * 576
 
