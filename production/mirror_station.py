@@ -45,7 +45,7 @@ def send_to_pi(img, ser):
                 # print(f"pix: {pix}, img: {PREV_IMG[n]}")
                 change_count += 1
 
-        FRAME_TIME = change_count * 3 / 576 + 0.1
+        FRAME_TIME = change_count * 2 / 576 + 0.1
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
