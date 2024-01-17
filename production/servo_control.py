@@ -82,7 +82,7 @@ def main():
                 for j in range(4):
                     for i in range(4):
                         servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                        time.sleep(0.05)
+                        time.sleep(0.01)
 
                 
 
