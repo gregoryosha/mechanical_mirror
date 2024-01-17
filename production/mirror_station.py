@@ -18,7 +18,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 
 #Servo Global variables
 SER_TIME = time.time()
-FRAME_TIME = 0.2
+FRAME_TIME = 0.3
 FRAME_COUNT = 0
 FIRST_FRAME = True
 PREV_IMG = [0] * 576
