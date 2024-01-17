@@ -49,7 +49,7 @@ def send_to_pi(img, ser):
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
         ser.flush() 
-        # print(f"Waiting: {ser.out_waiting}")
+        print(f"Servos changed: {change_count}")
         PREV_IMG = img_list
         SER_TIME = time.time()
 
