@@ -42,6 +42,7 @@ def send_to_pi(img, ser):
         change_count = 0
         for pix, n in enumerate(img_list):
             if (pix != PREV_IMG[n]):
+                print(f"pix: {pix}, img: {PREV_IMG[n]}")
                 change_count += 1
 
         FRAME_TIME = change_count * 0.7 / 576 + 0.1
