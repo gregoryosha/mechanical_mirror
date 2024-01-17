@@ -21,7 +21,7 @@ BOX_NUM = 6
 IN_ANG = 80
 OUT_ANG = 120
 SER_TIME = time.time()
-FRAME_TIME = 0.2
+FRAME_TIME = 0.1
 FRAME_COUNT = 0
 FIRST_FRAME = True
 PREV_IMG = [0] * 576
@@ -38,12 +38,15 @@ def send_to_pi(img):
     global SER_TIME
     global FRAME_COUNT
     global FRAME_TIME
+
     if (time.time() - SER_TIME) > FRAME_TIME:
         w, h = (RESOLUTION, RESOLUTION)
         #Resize input to pixelated size
-        pix_img = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
-        img_list = pix_img[:, :, 0].flatten().tolist()
-        # print(f"Waiting: {ser.out_waiting}")
+        temp = cv2.resize(img, (w, h), interpolation=cv2.INTER_LINEAR)
+        output = cv2.resize(temp, (1280, 960), interpolation=cv2.INTER_NEAREST)
+
+        cv2.imshow("current frame", output)
+
         FRAME_COUNT += 1
         print(f"frame: {FRAME_COUNT}")
         SER_TIME = time.time()
@@ -87,14 +90,15 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 48)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 48)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 100)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 100)
 
     # Visualization parameters
     mask_color = (0, 0, 0)  # white
     bg_color = (255, 255, 255)
 
-    def save_result(result: vision.PoseLandmarkerResult):
+    def save_result(result: vision.PoseLandmarkerResult,
+                    unused_output_image: mp.Image, timestamp_ms: int):
         global DETECTION_RESULT, COUNTER
 
         DETECTION_RESULT = result
@@ -151,7 +155,6 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
         send_to_pi(current_frame)
-        cv2.imshow("current frame", current_frame)
         if cv2.waitKey(5) & 0xFF == 27:
             break
     detector.close()

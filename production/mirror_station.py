@@ -100,7 +100,8 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
     mask_color = (0, 0, 0)  # white
     bg_color = (255, 255, 255)
 
-    def save_result(result: vision.PoseLandmarkerResult):
+    def save_result(result: vision.PoseLandmarkerResult,
+                    unused_output_image: mp.Image, timestamp_ms: int):
         global DETECTION_RESULT, COUNTER
 
         DETECTION_RESULT = result
