@@ -32,6 +32,7 @@ def display(img, servo_arr, pca_arr) -> None:
                 try:
                     box_address = int(i/4) + (6 * int(j/4))
                     servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+                    time.sleep(0.0005)
                 except OSError as report:
                      print(f"OSError: {report}")
                 except ValueError as report:
