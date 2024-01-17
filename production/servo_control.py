@@ -64,7 +64,7 @@ def main():
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
         pca_arr[n].frequency = 50
-        time.sleep(1)
+        time.sleep(0.01)
     servo_arr = servo.Servo
     print("Servo shields initialized... ")
     try:
