@@ -50,6 +50,26 @@ def decodeStates(data: bytes) -> list[int]:
             out_states.append(bit)
     return out_states
 
+def reload(servo_arr, pca_arr):
+    i2c = busio.I2C(board.SCL, board.SDA)
+
+    for n in range(BOX_NUM):
+        pca_arr[n].reset()
+    
+    for n in range(BOX_NUM):
+        pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
+        pca_arr[n].frequency = 50
+        time.sleep(0.01)
+    
+    for n in range(BOX_NUM):
+        for j in range(4):
+            for i in range(4):
+                servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
+            time.sleep(0.01)
+
+    for n in range(BOX_NUM):
+        pca_arr[n].reset()
+        
 def main():
     global FRAME_COUNT
     i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
@@ -80,11 +100,8 @@ def main():
                         FRAME_COUNT += 1
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
-        for n in range(BOX_NUM):
-                for j in range(4):
-                    for i in range(4):
-                        servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                    time.sleep(0.05)
+        reload(servo_arr, pca_arr)
+        
 
                 
 
