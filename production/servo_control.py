@@ -54,6 +54,7 @@ def decodeStates(data: bytes) -> list[int]:
     return out_states
 
 def reload(servo_arr, pca_arr):
+    print("reloading...")
     i2c = busio.I2C(board.SCL, board.SDA)
 
     for n in range(BOX_NUM):
@@ -62,7 +63,7 @@ def reload(servo_arr, pca_arr):
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
         pca_arr[n].frequency = 50
-        time.sleep(0.01)
+        time.sleep(0.02)
     
     for n in range(BOX_NUM):
         for j in range(4):
@@ -123,7 +124,7 @@ def main():
         print("Exiting and reseting servos...")
         reload(servo_arr, pca_arr)
     except OSError as report:
-        print(f"OSError: {report}")
+        print(f"OSError in Main: {report}")
         main()
         
 
