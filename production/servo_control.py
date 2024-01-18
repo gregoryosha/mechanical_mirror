@@ -95,18 +95,18 @@ def main():
             timeout=1
     )
     print("Starting serial connection... ")
-
     pca_arr = []
-    for n in range(BOX_NUM):
-        pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
-        pca_arr[n].frequency = 50
-        time.sleep(0.02)
-    servo_arr = servo.Servo
-    print("Servo shields initialized... ")
-
-    paused = False
-    PAUSE_TIME = time.time()
     try:
+        for n in range(BOX_NUM):
+            pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
+            pca_arr[n].frequency = 50
+            time.sleep(0.02)
+        servo_arr = servo.Servo
+        print("Servo shields initialized... ")
+
+        paused = False
+        PAUSE_TIME = time.time()
+    
         while True:
             if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
                 reload(servo_arr, pca_arr)
