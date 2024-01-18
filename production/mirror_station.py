@@ -22,6 +22,7 @@ FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
 PAUSE_TIME = time.time()
 TIME_TILL_RESET = 3
+paused = False
 
 
 # Global variables to calculate FPS
@@ -32,6 +33,7 @@ RESOLUTION = 24
 
 def send_to_pi(img, ser):
     global SER_TIME, FRAME_TIME, PREV_IMG, PAUSE_TIME
+    global paused
     
     if (time.time() - SER_TIME) > FRAME_TIME:
         #Resize input to pixelated size
@@ -56,7 +58,7 @@ def send_to_pi(img, ser):
         if (change_count != 0):
             PAUSE_TIME = time.time()
             paused = False
-            
+
             ser.write(encodeStates(img_list))    
             ser.flush() 
         # print(f"Servos changed: {change_count}")
