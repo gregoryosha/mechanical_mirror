@@ -106,7 +106,7 @@ def main():
     try:
         while True:
             if ((time.time() - PAUSE_TIME) > 10 and (not paused)):
-                reload()
+                reload(servo_arr, pca_arr)
                 paused = True
             if ser.in_waiting > 0:
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
