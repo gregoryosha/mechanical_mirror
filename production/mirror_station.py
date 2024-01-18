@@ -72,8 +72,8 @@ def encodeStates(states: list[int]) -> bytes:
     return out_bytes
 
 def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
-        min_pose_detection_confidence: float=0.5,
-        min_pose_presence_confidence: float=0.5, min_tracking_confidence: float=0.5,
+        min_pose_detection_confidence: float=0.6,
+        min_pose_presence_confidence: float=0.6, min_tracking_confidence: float=0.5,
         camera_id: int=0, width: int=1280, height: int=960) -> None:
     """Continuously run inference on images acquired from the camera.
 
