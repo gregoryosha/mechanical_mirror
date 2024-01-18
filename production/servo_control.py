@@ -59,6 +59,7 @@ def reload(servo_arr, pca_arr):
 
     for n in range(BOX_NUM):
         pca_arr[n].reset()
+        time.sleep(0.02)
     
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
