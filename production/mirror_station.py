@@ -48,9 +48,10 @@ def send_to_pi(img, ser):
         FRAME_TIME = change_count * 1.5 / 576 + 0.2
 
         # Join the elements into a single string
-        ser.write(encodeStates(img_list))    
-        ser.flush() 
-        print(f"Servos changed: {change_count}")
+        if (change_count != 0):
+            ser.write(encodeStates(img_list))    
+            ser.flush() 
+        # print(f"Servos changed: {change_count}")
         PREV_IMG = img_list
         SER_TIME = time.time()
 
