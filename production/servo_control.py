@@ -56,20 +56,26 @@ def decodeStates(data: bytes) -> list[int]:
 
 def reload(servo_arr, pca_arr):
     print("reloading...")
-    
-    for n in range(BOX_NUM):
-        for j in range(4):
-            for i in range(4):
-                servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+    try: 
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                    time.sleep(0.001)
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
+                    time.sleep(0.001)
+        
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
                 time.sleep(0.001)
-                servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                time.sleep(0.001)
-    
-    for n in range(BOX_NUM):
-        for j in range(4):
-            for i in range(4):
-                servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
-            time.sleep(0.01)
+
+    except OSError as report:
+        print(f"OSError: {report}")
+    except ValueError as report:
+        print(f"overloaded, ValueError: {report}")
+        
     
     if (ser.in_waiting >= 288):
         print(f"Buffer size: {ser.in_waiting}")
