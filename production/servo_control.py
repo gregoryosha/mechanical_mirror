@@ -78,6 +78,10 @@ def reload(servo_arr, pca_arr):
             for i in range(4):
                 servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
             time.sleep(0.01)
+    
+    if (ser.in_waiting >= 288):
+        print(f"Buffer size: {ser.in_waiting}")
+        blank = ser.read(288)
 
 
 
@@ -87,6 +91,7 @@ def reload(servo_arr, pca_arr):
 def main():
     global FRAME_COUNT
     global PAUSE_TIME
+    global ser
     i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
     ser = serial.Serial(
@@ -115,9 +120,9 @@ def main():
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
                     display(img, servo_arr, pca_arr)
-                    if (ser.in_waiting >= 144):
+                    if (ser.in_waiting >= 288):
                         print(f"Buffer size: {ser.in_waiting}")
-                        blank = ser.read(144)
+                        blank = ser.read(288)
                     FRAME_COUNT += 1
 
                     PAUSE_TIME = time.time()
