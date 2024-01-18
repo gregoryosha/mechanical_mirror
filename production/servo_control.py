@@ -101,6 +101,7 @@ def main():
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
         reload(servo_arr, pca_arr)
+        i2c.unlock()
         
 
                 
