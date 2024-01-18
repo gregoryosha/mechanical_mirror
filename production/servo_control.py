@@ -56,20 +56,12 @@ def decodeStates(data: bytes) -> list[int]:
 
 def reload(servo_arr, pca_arr):
     print("reloading...")
-    i2c = busio.I2C(board.SCL, board.SDA)
-
-    for n in range(BOX_NUM):
-        pca_arr[n].reset()
-        time.sleep(0.02)
-    
-    for n in range(BOX_NUM):
-        pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
-        pca_arr[n].frequency = 50
-        time.sleep(0.02)
     
     for n in range(BOX_NUM):
         for j in range(4):
             for i in range(4):
+                servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                time.sleep(0.001)
                 servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
                 time.sleep(0.001)
     
@@ -89,8 +81,7 @@ def reload(servo_arr, pca_arr):
 
         
 def main():
-    global FRAME_COUNT
-    global PAUSE_TIME
+    global FRAME_COUNT, PAUSE_TIME
     global ser
     i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
