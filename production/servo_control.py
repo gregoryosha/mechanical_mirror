@@ -65,8 +65,18 @@ def reload(servo_arr, pca_arr):
         for j in range(4):
             for i in range(4):
                 servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
+            time.sleep(0.01)
+
+    for n in range(BOX_NUM):
+        for j in range(4):
+            for i in range(4):
                 servo_arr(pca_arr[n].channels[i*4 + 3-j]).duty_cycle = 0
             time.sleep(0.01)
+
+
+
+                            
+
         
 def main():
     global FRAME_COUNT
