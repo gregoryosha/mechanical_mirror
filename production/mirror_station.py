@@ -49,7 +49,7 @@ def send_to_pi(img, ser):
 
 
         if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-            FRAME_TIME = 7
+            FRAME_TIME = 6
             paused = True
             print("pausing frames... ")
         else:
