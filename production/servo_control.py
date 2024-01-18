@@ -76,7 +76,7 @@ def reload(servo_arr, pca_arr):
     except ValueError as report:
         print(f"overloaded, ValueError: {report}")
         
-    
+    print("finished reload")
     if (ser.in_waiting >= 288):
         print(f"Buffer size: {ser.in_waiting}")
         blank = ser.read(288)
