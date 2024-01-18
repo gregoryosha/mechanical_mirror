@@ -17,6 +17,9 @@ OUT_ANG = 140
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * 576
 
+PAUSE_TIME = time.time()
+
+
 def display(img, servo_arr, pca_arr) -> None:
     global BOX_NUM
     global PREV_IMG
@@ -80,6 +83,7 @@ def reload(servo_arr, pca_arr):
         
 def main():
     global FRAME_COUNT
+    global PAUSE_TIME
     i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
     ser = serial.Serial(
@@ -93,22 +97,34 @@ def main():
     for n in range(BOX_NUM):
         pca_arr.append(PCA9685(i2c, address= (0x40 + n + ROW_INDEX*6)))
         pca_arr[n].frequency = 50
-        time.sleep(0.01)
+        time.sleep(0.02)
     servo_arr = servo.Servo
     print("Servo shields initialized... ")
+
+    paused = False
+    PAUSE_TIME = time.time()
     try:
         while True:
-                if ser.in_waiting > 0:
-                        data = ser.read(size=72) #data is stored in on/off => 72 bytes
-                        img = decodeStates(data)
-                        display(img, servo_arr, pca_arr)
-                        if (ser.in_waiting >= 144):
-                            print(f"Buffer size: {ser.in_waiting}")
-                            blank = ser.read(144)
-                        FRAME_COUNT += 1
+            if ((time.time() - PAUSE_TIME) > 10 and (not paused)):
+                reload()
+                paused = True
+            if ser.in_waiting > 0:
+                    data = ser.read(size=72) #data is stored in on/off => 72 bytes
+                    img = decodeStates(data)
+                    display(img, servo_arr, pca_arr)
+                    if (ser.in_waiting >= 144):
+                        print(f"Buffer size: {ser.in_waiting}")
+                        blank = ser.read(144)
+                    FRAME_COUNT += 1
+
+                    PAUSE_TIME = time.time()
+                    paused = False
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
         reload(servo_arr, pca_arr)
+    except OSError as report:
+        print(f"OSError: {report}")
+        main()
         
 
                 
