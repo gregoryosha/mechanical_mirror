@@ -18,6 +18,7 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 PAUSE_TIME = time.time()
+TIME_TILL_RESET = 5
 
 
 def display(img, servo_arr, pca_arr) -> None:
@@ -107,7 +108,7 @@ def main():
     PAUSE_TIME = time.time()
     try:
         while True:
-            if ((time.time() - PAUSE_TIME) > 10 and (not paused)):
+            if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
                 reload(servo_arr, pca_arr)
                 paused = True
             if ser.in_waiting > 0:
