@@ -69,6 +69,7 @@ def reload(servo_arr, pca_arr):
 
     for n in range(BOX_NUM):
         pca_arr[n].reset()
+        pca_arr[n].frequency = 0
         
 def main():
     global FRAME_COUNT
