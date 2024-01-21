@@ -27,7 +27,7 @@ def display(img, servo_arr, pca_arr) -> None:
 
     change_count = 0
     if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-        reload(servo_arr, pca_arr)
+        reload()
         paused = True
 
     for n in range(16 * BOX_NUM):
@@ -65,7 +65,7 @@ def decodeStates(data: bytes) -> list[int]:
             out_states.append(bit)
     return out_states
 
-def reload(servo_arr, pca_arr):
+def reload():
     ser.write(bytes('pause', 'utf-8')) 
     print("reloading...")
     try: 
@@ -85,10 +85,10 @@ def reload(servo_arr, pca_arr):
 
     except OSError as report:
         print(f"OSError: {report}")
-        reload(servo_arr, pca_arr)
+        reload()
     except ValueError as report:
         print(f"overloaded, ValueError: {report}")
-        reload(servo_arr, pca_arr)
+        reload()
         
     print("finished reload")
     if (ser.in_waiting >= 288):
@@ -97,12 +97,10 @@ def reload(servo_arr, pca_arr):
 
 
 
-                            
-
         
 def main():
     global FRAME_COUNT, PAUSE_TIME
-    global ser
+    global ser, pca_arr, servo_arr
     i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
     # i2c = busio.I2C()
     ser = serial.Serial(
@@ -124,7 +122,7 @@ def main():
             if ser.in_waiting > 0:
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
-                    display(img, servo_arr, pca_arr)
+                    display(img)
 
                     if (ser.in_waiting >= 288):
                         print(f"Buffer size: {ser.in_waiting}")
@@ -132,7 +130,7 @@ def main():
 
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
-        reload(servo_arr, pca_arr)
+        reload()
     except OSError as report:
         print(f"OSError in Main: {report}")
         main()
