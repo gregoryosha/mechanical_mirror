@@ -73,11 +73,12 @@ def encodeStates(states: list[int]) -> bytes:
     return out_bytes
 
 def pause_check(ser):
-    global FRAME_TIME
+    global FRAME_TIME, SER_TIME
     if ser.in_waiting > 0:
-        print(f"serial bytes: {ser.in_waiting}")
+        print(f"Pausing...")
         ser.reset_input_buffer()
         FRAME_TIME = RESET_TIME
+        SER_TIME = time.time()
 
 def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
         min_pose_detection_confidence: float=0.6,
