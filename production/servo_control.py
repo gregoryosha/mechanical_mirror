@@ -85,10 +85,10 @@ def reload(servo_arr, pca_arr):
 
     except OSError as report:
         print(f"OSError: {report}")
-        reload()
+        reload(servo_arr, pca_arr)
     except ValueError as report:
         print(f"overloaded, ValueError: {report}")
-        reload()
+        reload(servo_arr, pca_arr)
         
     print("finished reload")
     if (ser.in_waiting >= 288):
