@@ -18,7 +18,7 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 5 - 0.1
+TIME_TILL_RESET = 4
 
 
 def display(img, servo_arr, pca_arr) -> None:
@@ -40,6 +40,7 @@ def display(img, servo_arr, pca_arr) -> None:
                 except OSError as report:
                      print(f"OSError: {report}")
                 except ValueError as report:
+                     reload()
                      print(f"overloaded, ValueError: {report}")
         PREV_IMG = img
     else:
@@ -55,6 +56,7 @@ def decodeStates(data: bytes) -> list[int]:
     return out_states
 
 def reload(servo_arr, pca_arr):
+    ser.write(bytes('pause\n', 'utf-8')) 
     print("reloading...")
     try: 
         for n in range(BOX_NUM):

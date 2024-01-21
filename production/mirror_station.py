@@ -20,9 +20,8 @@ mp_drawing_styles = mp.solutions.drawing_styles
 SER_TIME = time.time()
 FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
-PAUSE_TIME = time.time()
-TIME_TILL_RESET = 5 - 0.1 
-paused = False
+RESET_TIME = 6
+
 
 
 # Global variables to calculate FPS
@@ -32,8 +31,7 @@ DETECTION_RESULT = None
 RESOLUTION = 24
 
 def send_to_pi(img, ser):
-    global SER_TIME, FRAME_TIME, PREV_IMG, PAUSE_TIME
-    global paused
+    global SER_TIME, FRAME_TIME, PREV_IMG
     
     if (time.time() - SER_TIME) > FRAME_TIME:
         #Resize input to pixelated size
@@ -47,21 +45,12 @@ def send_to_pi(img, ser):
                 # print(f"pix: {pix}, img: {PREV_IMG[n]}")
                 change_count += 1
 
-
-        if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-            FRAME_TIME = 6
-            paused = True
-            print("pausing frames... ")
-        else:
-            FRAME_TIME = change_count * 1.5 / 576 + 0.2
+        FRAME_TIME = change_count * 1.5 / 576 + 0.2
 
         # Join the elements into a single string
-        if (change_count != 0):
-            PAUSE_TIME = time.time()
-            paused = False
+        ser.write(encodeStates(img_list))    
+        ser.flush() 
 
-            ser.write(encodeStates(img_list))    
-            ser.flush() 
         # print(f"Servos changed: {change_count}")
         PREV_IMG = img_list
         SER_TIME = time.time()
@@ -82,6 +71,13 @@ def encodeStates(states: list[int]) -> bytes:
         out_bytes += new_byte.to_bytes(1, 'big')
 
     return out_bytes
+
+def pause_check(ser):
+    if ser.in_waiting > 0:
+        msg = ser.readline()
+        msg = msg.decode("utf-8","ignore")
+        if (msg == 'pause'):
+            FRAME_TIME = RESET_TIME
 
 def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
         min_pose_detection_confidence: float=0.6,
@@ -170,6 +166,7 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
+        pause_check(ser)
         send_to_pi(current_frame, ser)
 
     detector.close()
