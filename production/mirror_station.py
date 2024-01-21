@@ -177,6 +177,7 @@ def main():
         baudrate = 115200,
         timeout=1
     )
+    print("Waiting on pi...")
     while True: 
         if ser.in_waiting > 0:
             line = ser.readline()
