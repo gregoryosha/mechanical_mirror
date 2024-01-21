@@ -76,7 +76,7 @@ def pause_check(ser):
     global FRAME_TIME
     if ser.in_waiting > 0:
         print(f"serial bytes: {ser.in_waiting}")
-        msg = ser.readline()
+        # msg = ser.readline()
         # msg = msg.decode("utf-8","ignore")
         # print(msg)
         # if (msg == 'pause'):
