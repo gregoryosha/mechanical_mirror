@@ -49,7 +49,7 @@ def send_to_pi(img, ser):
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
-        #ser.flush() 
+        ser.flush() 
 
         # print(f"Servos changed: {change_count}")
         PREV_IMG = img_list
@@ -75,8 +75,9 @@ def encodeStates(states: list[int]) -> bytes:
 def pause_check(ser):
     global FRAME_TIME
     if ser.in_waiting > 0:
+        print(f"serial bytes: {ser.in_waiting}")
         msg = ser.readline()
-        msg = msg.decode("utf-8","ignore")
+        # msg = msg.decode("utf-8","ignore")
         # print(msg)
         # if (msg == 'pause'):
         #     FRAME_TIME = RESET_TIME
