@@ -66,7 +66,7 @@ def decodeStates(data: bytes) -> list[int]:
     return out_states
 
 def reload(servo_arr, pca_arr):
-    ser.write(bytes('pause\n', 'utf-8')) 
+    ser.write(bytes('pause', 'utf-8')) 
     print("reloading...")
     try: 
         for n in range(BOX_NUM):
