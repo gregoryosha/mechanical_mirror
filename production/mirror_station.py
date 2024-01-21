@@ -49,7 +49,7 @@ def send_to_pi(img, ser):
 
         # Join the elements into a single string
         ser.write(encodeStates(img_list))    
-        ser.flush() 
+        #ser.flush() 
 
         # print(f"Servos changed: {change_count}")
         PREV_IMG = img_list
@@ -76,6 +76,7 @@ def pause_check(ser):
     if ser.in_waiting > 0:
         msg = ser.readline()
         msg = msg.decode("utf-8","ignore")
+        print(msg)
         if (msg == 'pause'):
             FRAME_TIME = RESET_TIME
 
@@ -166,6 +167,7 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
 
                 visualized_mask = np.where(condition, mask_image, bg_image)
                 current_frame = visualized_mask
+
         pause_check(ser)
         send_to_pi(current_frame, ser)
 
