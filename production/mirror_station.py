@@ -77,11 +77,7 @@ def pause_check(ser):
     if ser.in_waiting > 0:
         print(f"serial bytes: {ser.in_waiting}")
         ser.reset_input_buffer()
-        # msg = ser.readline()
-        # msg = msg.decode("utf-8","ignore")
-        # print(msg)
-        # if (msg == 'pause'):
-        #     FRAME_TIME = RESET_TIME
+        FRAME_TIME = RESET_TIME
 
 def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
         min_pose_detection_confidence: float=0.6,
