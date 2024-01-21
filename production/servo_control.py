@@ -99,16 +99,10 @@ def reload():
 
 
         
-def main():
+def control_servos():
     global FRAME_COUNT, PAUSE_TIME
-    global ser, pca_arr, servo_arr
-    i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
-    # i2c = busio.I2C()
-    ser = serial.Serial(
-            port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
-            baudrate = 115200,
-            timeout=1
-    )
+    global pca_arr, servo_arr
+    
     print("Starting serial connection... ")
     pca_arr = []
     try:
@@ -132,12 +126,24 @@ def main():
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
         reload()
+        exit
     except OSError as report:
         print(f"OSError in Main: {report}")
-        main()
+        control_servos()
         
-
+def main():
+    global i2c, ser
+    i2c = busio.I2C(board.SCL, board.SDA) #i2c = busio.I2C(board.SCL, board.SDA) for raspi
+    # i2c = busio.I2C()
+    ser = serial.Serial(
+            port='/dev/serial0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+            baudrate = 115200,
+            timeout=1
+    )
+    time.sleep(0.5)
+    ser.write(bytes('start', 'utf-8')) 
+    print("Starting Mirror!")
+    control_servos()
                 
-
 if __name__ == '__main__':
     main()

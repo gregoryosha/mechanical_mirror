@@ -75,10 +75,11 @@ def encodeStates(states: list[int]) -> bytes:
 def pause_check(ser):
     global FRAME_TIME, SER_TIME
     if ser.in_waiting > 0:
-        print(f"Pausing...")
-        ser.reset_input_buffer()
-        FRAME_TIME = RESET_TIME
-        SER_TIME = time.time()
+        if ser.in_waiting == 5:
+            print(f"Pausing...")
+            ser.reset_input_buffer()
+            FRAME_TIME = RESET_TIME
+            SER_TIME = time.time()
 
 def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
         min_pose_detection_confidence: float=0.6,
@@ -99,11 +100,6 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
       width: The width of the frame captured from the camera.
       height: The height of the frame captured from the camera.
   """
-    ser = serial.Serial(
-        port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
-        baudrate = 115200,
-        timeout=1
-    )
 
     # Start capturing video input from the camera
     cap = cv2.VideoCapture(cv2.CAP_V4L2)
@@ -174,6 +170,20 @@ def run_mirror(model:str='pose_landmarker.task', num_poses: int=1,
     detector.close()
     cap.release()
 
+def main():
+    global ser
+    ser = serial.Serial(
+        port='/dev/ttyUSB0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
+        baudrate = 115200,
+        timeout=1
+    )
+    while True: 
+        if ser.in_waiting > 0:
+            line = ser.readline()
+            line = line.decode("utf-8","ignore")
+            if (line == 'start'):
+                time.sleep(5)
+                run_mirror()
 
 if __name__ == '__main__':
-    run_mirror()
+    main()
