@@ -18,7 +18,7 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 4
+TIME_TILL_RESET = 5
 paused = True
 
 def display(img) -> None:
@@ -68,6 +68,7 @@ def decodeStates(data: bytes) -> list[int]:
 def reload():
     ser.write(bytes('pause', 'utf-8')) 
     print("reloading...")
+    time.sleep(0.5)
     try: 
         for n in range(BOX_NUM):
             for j in range(4):
