@@ -21,7 +21,7 @@ PAUSE_TIME = time.time()
 TIME_TILL_RESET = 4
 paused = True
 
-def display(img, servo_arr, pca_arr) -> None:
+def display(img) -> None:
     global BOX_NUM, PREV_IMG, PAUSE_TIME
     global paused
 
