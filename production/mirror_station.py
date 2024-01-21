@@ -73,6 +73,7 @@ def encodeStates(states: list[int]) -> bytes:
     return out_bytes
 
 def pause_check(ser):
+    global FRAME_TIME
     if ser.in_waiting > 0:
         msg = ser.readline()
         msg = msg.decode("utf-8","ignore")
