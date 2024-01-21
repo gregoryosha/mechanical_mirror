@@ -18,7 +18,7 @@ FRAME_COUNT = 0 #Used for debugging
 PREV_IMG = [0] * 576
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 3
+TIME_TILL_RESET = 5 - 0.1
 
 
 def display(img, servo_arr, pca_arr) -> None:

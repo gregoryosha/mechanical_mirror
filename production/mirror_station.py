@@ -21,7 +21,7 @@ SER_TIME = time.time()
 FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 3 - 0.1
+TIME_TILL_RESET = 5 - 0.1 
 paused = False
 
 
@@ -53,7 +53,7 @@ def send_to_pi(img, ser):
             paused = True
             print("pausing frames... ")
         else:
-            FRAME_TIME = change_count * 2 / 576 + 0.2
+            FRAME_TIME = change_count * 1.5 / 576 + 0.2
 
         # Join the elements into a single string
         if (change_count != 0):
