@@ -106,7 +106,7 @@ def main():
         servo_arr = servo.Servo
         print("Servo shields initialized... ")
 
-        paused = False
+        paused = True
         PAUSE_TIME = time.time()
     
         while True:
