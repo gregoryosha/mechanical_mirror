@@ -19,33 +19,43 @@ PREV_IMG = [0] * 576
 
 PAUSE_TIME = time.time()
 TIME_TILL_RESET = 4
-
+paused = True
 
 def display(img, servo_arr, pca_arr) -> None:
-    global BOX_NUM
-    global PREV_IMG
-    if (len(img) == 576):
-        for n in range(16 * BOX_NUM):
-            if (img[n] != PREV_IMG[n]):
-                j = n//24 #height pixel
-                i = n%24 #width pixel
-                if (img[n] == 0):
-                    ang = OUT_ANG
-                else:
-                    ang = IN_ANG
-                try:
-                    box_address = int(i/4) + (6 * int(j/4))
-                    servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-                    time.sleep(0.001)
-                except OSError as report:
-                     print(f"OSError: {report}")
-                except ValueError as report:
-                     reload()
-                     print(f"overloaded, ValueError: {report}")
-        PREV_IMG = img
-    else:
-        print("img size unequal...")
-        print(f"image size: {len(img)}")
+    global BOX_NUM, PREV_IMG, PAUSE_TIME
+    global paused
+
+    change_count = 0
+    if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
+        reload(servo_arr, pca_arr)
+        paused = True
+
+    for n in range(16 * BOX_NUM):
+        if (img[n] != PREV_IMG[n]):
+            #Checking for a pause
+            change_count += 1
+            paused = False
+
+            j = n//24 #height pixel
+            i = n%24 #width pixel
+            if (img[n] == 0):
+                ang = OUT_ANG
+            else:
+                ang = IN_ANG
+            try:
+                box_address = int(i/4) + (6 * int(j/4))
+                servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
+                time.sleep(0.001)
+            except OSError as report:
+                    print(f"OSError: {report}")
+            except ValueError as report:
+                    reload()
+                    print(f"overloaded, ValueError: {report}")
+    PREV_IMG = img    
+
+    if (change_count != 0):
+        PAUSE_TIME = time.time()
+        
 
 def decodeStates(data: bytes) -> list[int]:
     out_states = []
@@ -75,8 +85,10 @@ def reload(servo_arr, pca_arr):
 
     except OSError as report:
         print(f"OSError: {report}")
+        reload()
     except ValueError as report:
         print(f"overloaded, ValueError: {report}")
+        reload()
         
     print("finished reload")
     if (ser.in_waiting >= 288):
@@ -107,25 +119,17 @@ def main():
             time.sleep(0.02)
         servo_arr = servo.Servo
         print("Servo shields initialized... ")
-
-        paused = True
-        PAUSE_TIME = time.time()
     
         while True:
-            if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-                reload(servo_arr, pca_arr)
-                paused = True
             if ser.in_waiting > 0:
                     data = ser.read(size=72) #data is stored in on/off => 72 bytes
                     img = decodeStates(data)
                     display(img, servo_arr, pca_arr)
+
                     if (ser.in_waiting >= 288):
                         print(f"Buffer size: {ser.in_waiting}")
                         blank = ser.read(288)
-                    FRAME_COUNT += 1
 
-                    PAUSE_TIME = time.time()
-                    paused = False
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
         reload(servo_arr, pca_arr)
