@@ -88,7 +88,7 @@ def reload(flip: str='null'):
     try: 
         for n in range(BOX_NUM):
             pca_arr[n].reset()
-            time.sleep(0.02)
+            time.sleep(0.05)
 
         for n in range(BOX_NUM):
             for j in range(4):
