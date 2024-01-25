@@ -71,6 +71,7 @@ def reload(flip: str='null'):
     global invert, IN_ANG, OUT_ANG
     
     if (flip == 'flip'):
+        print('flipping!')
         temp = IN_ANG
         IN_ANG = OUT_ANG
         OUT_ANG = temp
