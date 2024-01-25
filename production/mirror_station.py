@@ -185,6 +185,7 @@ def main():
             line = ser.readline()
             line = line.decode("utf-8","ignore")
             if (line == 'start'):
+                print("Pi found! starting mirror")
                 time.sleep(3)
                 run_mirror()
 
