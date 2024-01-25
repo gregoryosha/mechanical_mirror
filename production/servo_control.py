@@ -17,7 +17,7 @@ OUT_ANG = 140
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * 576
 
-invert = False
+inverted = False
 
 PAUSE_TIME = time.time()
 TIME_TILL_RESET = 5
@@ -25,11 +25,11 @@ paused = True
 
 def display(img) -> None:
     global BOX_NUM, PREV_IMG, PAUSE_TIME
-    global paused, invert
+    global paused
 
     change_count = 0
     if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-        reload()
+        reload('flip')
         paused = True
 
     for n in range(16 * BOX_NUM):
@@ -41,15 +41,9 @@ def display(img) -> None:
             j = n//24 #height pixel
             i = n%24 #width pixel
             if (img[n] == 0):
-                if (invert):
-                    ang = IN_ANG
-                else:
-                    ang = OUT_ANG
+                ang = OUT_ANG
             else:
-                if (invert):
-                    ang = OUT_ANG
-                else:
-                    ang = IN_ANG
+                ang = IN_ANG
             try:
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
@@ -73,10 +67,22 @@ def decodeStates(data: bytes) -> list[int]:
             out_states.append(bit)
     return out_states
 
-def reload():
-    global invert 
+def reload(flip: str='null'):
+    global invert, IN_ANG, OUT_ANG
+    
+    if (flip == 'flip'):
+        temp = IN_ANG
+        IN_ANG = OUT_ANG
+        OUT_ANG = temp
+        invert = not invert
+    elif (flip == 'reset'):
+        if (invert):
+            temp = IN_ANG
+            IN_ANG = OUT_ANG
+            OUT_ANG = temp
+
     ser.write(bytes('pause', 'utf-8')) 
-    print("reloading...")
+    print('reloading...')
     time.sleep(0.5)
     try: 
         for n in range(BOX_NUM):
@@ -100,7 +106,6 @@ def reload():
         print(f"overloaded, ValueError: {report}")
         reload()
         
-    invert = not invert
     print("finished reload")
     if (ser.in_waiting >= 288):
         print(f"Buffer size: {ser.in_waiting}")
@@ -135,7 +140,7 @@ def control_servos():
 
     except KeyboardInterrupt:
         print("Exiting and reseting servos...")
-        reload()
+        reload('reset')
         exit
     except OSError as report:
         print(f"OSError in Main: {report}")
