@@ -17,13 +17,15 @@ OUT_ANG = 140
 FRAME_COUNT = 0 #Used for debugging 
 PREV_IMG = [0] * 576
 
+invert = False
+
 PAUSE_TIME = time.time()
 TIME_TILL_RESET = 5
 paused = True
 
 def display(img) -> None:
     global BOX_NUM, PREV_IMG, PAUSE_TIME
-    global paused
+    global paused, invert
 
     change_count = 0
     if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
@@ -39,9 +41,15 @@ def display(img) -> None:
             j = n//24 #height pixel
             i = n%24 #width pixel
             if (img[n] == 0):
-                ang = OUT_ANG
+                if (invert):
+                    ang = IN_ANG
+                else:
+                    ang = OUT_ANG
             else:
-                ang = IN_ANG
+                if (invert):
+                    ang = OUT_ANG
+                else:
+                    ang = IN_ANG
             try:
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
@@ -91,6 +99,7 @@ def reload():
         print(f"overloaded, ValueError: {report}")
         reload()
         
+    invert = not invert
     print("finished reload")
     if (ser.in_waiting >= 288):
         print(f"Buffer size: {ser.in_waiting}")
