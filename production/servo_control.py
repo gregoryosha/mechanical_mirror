@@ -74,6 +74,7 @@ def decodeStates(data: bytes) -> list[int]:
     return out_states
 
 def reload():
+    global invert 
     ser.write(bytes('pause', 'utf-8')) 
     print("reloading...")
     time.sleep(0.5)
