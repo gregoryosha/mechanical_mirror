@@ -68,16 +68,16 @@ def decodeStates(data: bytes) -> list[int]:
     return out_states
 
 def reload(flip: str='null'):
-    global invert, IN_ANG, OUT_ANG
+    global inverted, IN_ANG, OUT_ANG
     
     if (flip == 'flip'):
         print('flipping!')
         temp = IN_ANG
         IN_ANG = OUT_ANG
         OUT_ANG = temp
-        invert = not invert
+        inverted = not inverted
     elif (flip == 'reset'):
-        if (invert):
+        if (inverted):
             temp = IN_ANG
             IN_ANG = OUT_ANG
             OUT_ANG = temp
