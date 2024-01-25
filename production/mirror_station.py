@@ -183,7 +183,7 @@ def main():
             line = ser.readline()
             line = line.decode("utf-8","ignore")
             if (line == 'start'):
-                time.sleep(5)
+                time.sleep(3)
                 run_mirror()
 
 if __name__ == '__main__':

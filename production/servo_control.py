@@ -140,7 +140,7 @@ def main():
             baudrate = 115200,
             timeout=1
     )
-    time.sleep(0.5)
+    time.sleep(3)
     ser.write(bytes('start', 'utf-8')) 
     print("Starting Mirror!")
     control_servos()
