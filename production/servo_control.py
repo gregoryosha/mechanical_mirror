@@ -47,7 +47,7 @@ def display(img) -> None:
             try:
                 box_address = int(i/4) + (6 * int(j/4))
                 servo_arr(pca_arr[box_address].channels[3 - i%4 + 4*(j%4)]).angle = ang
-                time.sleep(0.001)
+                time.sleep(0.0015)
             except OSError as report:
                     print(f"OSError: {report}")
             except ValueError as report:
@@ -93,16 +93,14 @@ def reload(flip: str='null'):
         for n in range(BOX_NUM):
             for j in range(4):
                 for i in range(4):
-                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
-                    time.sleep(0.001)
                     servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                    time.sleep(0.001)
+                    time.sleep(0.002)
         
         for n in range(BOX_NUM):
             for j in range(4):
                 for i in range(4):
                     servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
-                time.sleep(0.001)
+                    time.sleep(0.001)
 
     except OSError as report:
         print(f"OSError: {report}")
