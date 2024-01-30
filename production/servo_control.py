@@ -160,10 +160,17 @@ def main():
             baudrate = 115200,
             timeout=1
     )
-    time.sleep(3)
-    ser.write(bytes('start', 'utf-8')) 
-    print("Starting Mirror!")
-    control_servos()
+    ser.reset_input_buffer()
+
+    while True:
+        ser.write(bytes('pi_start', 'utf-8')) 
+        print("Waiting on handshake...")
+        time.sleep(3)
+        if (ser.in_waiting > 0):
+            line = ser.readline().decode("utf-8","ignore")
+            if (line == 'station_start'):
+                print("Computer Handshake! Starting mirror")
+                control_servos()
                 
 if __name__ == '__main__':
     main()

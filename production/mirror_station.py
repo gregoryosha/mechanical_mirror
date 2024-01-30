@@ -182,11 +182,11 @@ def main():
     print("Waiting on pi...")
     while True: 
         if ser.in_waiting > 0:
-            line = ser.readline()
-            line = line.decode("utf-8","ignore")
-            if (line == 'start'):
-                print("Pi found! starting mirror")
-                time.sleep(3)
+            line = ser.readline().decode("utf-8","ignore")
+            if (line == 'pi_start'):
+                ser.write(bytes('station_start', 'utf-8')) 
+                print("Pi found! starting mirror in 5 seconds")
+                time.sleep(5)
                 run_mirror()
 
 if __name__ == '__main__':
