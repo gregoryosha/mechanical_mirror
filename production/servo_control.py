@@ -170,6 +170,7 @@ def main():
             if (line == 'station_start'):
                 print("Computer Handshake! Starting mirror")
                 control_servos()
+                exit()
                 
 if __name__ == '__main__':
     main()
