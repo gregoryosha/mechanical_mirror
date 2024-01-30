@@ -84,6 +84,7 @@ def reload(flip: str='null'):
 
     ser.write(bytes('pause', 'utf-8')) 
     print('reloading...')
+    time.sleep(1)
 
     try: 
         # for n in range(BOX_NUM):
