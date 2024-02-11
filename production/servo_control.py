@@ -8,6 +8,11 @@ import digitalio
 from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 
+import RPi.GPIO as GPIO
+
+
+#Pins
+RESET_PIN = 7
 
 #Servo Global variables
 ROW_INDEX = 0 # Change for each pico 0-5
@@ -87,9 +92,9 @@ def reload(flip: str='null'):
     time.sleep(1)
 
     try: 
-        # for n in range(BOX_NUM):
-        #     pca_arr[n].reset()
-        #     time.sleep(0.05)
+        GPIO.output(RESET_PIN, True)
+        time.sleep(1)
+        GPIO.output(RESET_PIN, False)
 
         for n in range(BOX_NUM):
             for j in range(4):
@@ -160,6 +165,10 @@ def main():
             timeout=1
     )
     ser.reset_input_buffer()
+
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(RESET_PIN, GPIO.OUT)  # type: ignore
+    GPIO.output(RESET_PIN, False)  # type: ignore
 
     while True:
         ser.write(bytes('pi_start', 'utf-8')) 
