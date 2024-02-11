@@ -17,7 +17,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 import RPi.GPIO as GPIO
 
 #Pins
-RESET_PIN = 7
+RESET_PIN = 4
 
 servo_arr = servo.Servo
 
@@ -36,7 +36,6 @@ for n in range(BOX_NUM):
     pca_arr[n].frequency = 50
 servo_arr = servo.Servo
 
-GPIO.setmode(GPIO.BOARD)
 GPIO.setup(RESET_PIN, GPIO.OUT)  # type: ignore
 GPIO.output(RESET_PIN, False)  # type: ignore
 
