@@ -19,7 +19,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 servo_arr = servo.Servo
 
 in_ang = 80
-out_ang = 120
+out_ang = 140
 
 short_sleep = 0.5
 long_sleep = 3
@@ -56,9 +56,21 @@ while True:
                         for i in range(4):
                             servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = in_ang
                         time.sleep(0.1)
+                for n in range(BOX_NUM):
+                    for j in range(4):
+                        for i in range(4):
+                            servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                            time.sleep(0.001)
                 break
     else:
-        for i in range(16):
-            for n in range(BOX_NUM):
-                servo_arr(pca_arr[n].channels[i]).angle = int(cmd)
-                time.sleep(0.05)
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = int(cmd)
+                    time.sleep(0.002)
+        
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                    time.sleep(0.001)
