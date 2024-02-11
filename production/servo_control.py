@@ -92,10 +92,6 @@ def reload(flip: str='null'):
     time.sleep(1)
 
     try: 
-        GPIO.output(RESET_PIN, True)
-        time.sleep(2)
-        GPIO.output(RESET_PIN, False)
-        time.sleep(2)
 
         for n in range(BOX_NUM):
             for j in range(4):
@@ -108,6 +104,11 @@ def reload(flip: str='null'):
                 for i in range(4):
                     servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
                     time.sleep(0.001)
+        
+        GPIO.output(RESET_PIN, True)
+        time.sleep(3)
+        GPIO.output(RESET_PIN, False)
+        time.sleep(3)
 
     except OSError as report:
         print(f"OSError: {report}")
