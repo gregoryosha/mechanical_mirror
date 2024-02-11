@@ -12,7 +12,7 @@ import RPi.GPIO as GPIO
 
 
 #Pins
-RESET_PIN = 7
+RESET_PIN = 4
 
 #Servo Global variables
 ROW_INDEX = 0 # Change for each pico 0-5
@@ -166,7 +166,6 @@ def main():
     )
     ser.reset_input_buffer()
 
-    GPIO.setmode(GPIO.BOARD)
     GPIO.setup(RESET_PIN, GPIO.OUT)  # type: ignore
     GPIO.output(RESET_PIN, False)  # type: ignore
 
