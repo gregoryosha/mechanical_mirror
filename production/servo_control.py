@@ -92,9 +92,9 @@ def reload(flip: str='null'):
     time.sleep(1)
 
     try: 
-        GPIO.output(RESET_PIN, True)
-        time.sleep(1)
-        GPIO.output(RESET_PIN, False)
+        # GPIO.output(RESET_PIN, True)
+        # time.sleep(1)
+        # GPIO.output(RESET_PIN, False)
 
         for n in range(BOX_NUM):
             for j in range(4):
