@@ -25,7 +25,7 @@ PREV_IMG = [0] * 576
 inverted = False
 
 PAUSE_TIME = time.time()
-TIME_SOFT_RESET = 30
+TIME_SOFT_RESET = 15
 TIME_HARD_RESET = 60 * 15
 paused = True
 hard_paused = False
