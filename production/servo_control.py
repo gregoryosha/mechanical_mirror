@@ -25,20 +25,28 @@ PREV_IMG = [0] * 576
 inverted = False
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 60
+TIME_SOFT_RESET = 15
+TIME_HARD_RESET = 60 * 15
 paused = True
+hard_paused = False
 
 def display(img) -> None:
     global BOX_NUM, PREV_IMG, PAUSE_TIME
-    global paused
+    global paused, hard_paused
 
     change_count = 0
-    if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-        reload('pause')
+    if ((time.time() - PAUSE_TIME) > TIME_SOFT_RESET and (not paused)):
         paused = True
+        hard_paused = False
+        reload()
+
+    elif ((time.time() - PAUSE_TIME) > TIME_HARD_RESET and (not hard_paused)):
+        reload('reset')
+        hard_paused = True
 
     for n in range(16 * BOX_NUM):
         if (img[n] != PREV_IMG[n]):
+
             #Checking for a pause
             change_count += 1
             paused = False
@@ -72,44 +80,43 @@ def decodeStates(data: bytes) -> list[int]:
             out_states.append(bit)
     return out_states
 
-def reload(flip: str='null'):
+def reload(mode: str='null'):
     global inverted, IN_ANG, OUT_ANG
-    
-    if (flip == 'flip'):
+    if (mode == 'null'):
+        print('Soft Reset')
+        ser.write(bytes('00000', 'utf-8')) #Send 5 bytes for soft reset
+    elif (mode == 'reset'):
         print('flipping!')
+        ser.write(bytes('000000', 'utf-8')) #Send 6 bytes for hard reset
         temp = IN_ANG
         IN_ANG = OUT_ANG
         OUT_ANG = temp
         inverted = not inverted
-    elif (flip == 'reset'):
-        if (inverted):
-            temp = IN_ANG
-            IN_ANG = OUT_ANG
-            OUT_ANG = temp
 
-    ser.write(bytes('pause', 'utf-8')) 
     print('reloading...')
-    time.sleep(1)
+    time.sleep(0.5)
 
     try: 
-
-        for n in range(BOX_NUM):
-            for j in range(4):
-                for i in range(4):
-                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                    time.sleep(0.002)
-        
         for n in range(BOX_NUM):
             for j in range(4):
                 for i in range(4):
                     servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
-                    time.sleep(0.001)
-        
-        GPIO.output(RESET_PIN, True)
-        time.sleep(3)
-        GPIO.output(RESET_PIN, False)
-        time.sleep(3)
+                    time.sleep(0.002)
 
+        if (mode == 'reset'):
+            GPIO.output(RESET_PIN, True)
+            time.sleep(10)
+            GPIO.output(RESET_PIN, False)
+            time.sleep(2)
+
+            for n in range(BOX_NUM):
+                for j in range(4):
+                    for i in range(4):
+                        servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
+                        time.sleep(0.003)
+        
+        
+        
     except OSError as report:
         print(f"OSError: {report}")
         reload()

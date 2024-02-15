@@ -22,8 +22,8 @@ mp_drawing_styles = mp.solutions.drawing_styles
 SER_TIME = time.time()
 FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
-RESET_TIME = 10
-
+SOFT_RESET_TIME = 3
+HARD_RESET_TIME = 15
 
 
 # Global variables to calculate FPS
@@ -77,10 +77,15 @@ def encodeStates(states: list[int]) -> bytes:
 def pause_check(ser):
     global FRAME_TIME, SER_TIME
     if ser.in_waiting > 0:
-        if ser.in_waiting == 5:
-            print(f"Pausing...")
+        if ser.in_waiting == 5: #Check byte number, 5 for soft, 6 for hard reset
+            print(f"Soft pausing...")
             ser.reset_input_buffer()
-            FRAME_TIME = RESET_TIME
+            FRAME_TIME = SOFT_RESET_TIME
+            SER_TIME = time.time()
+        if ser.in_waiting == 6: #Check byte number, 5 for soft, 6 for hard reset
+            print(f"Hard reseting...")
+            ser.reset_input_buffer()
+            FRAME_TIME = HARD_RESET_TIME
             SER_TIME = time.time()
 
 def run_mirror(model:str='/home/greg/source/mechanical_mirror/pose_landmarker.task', num_poses: int=1,
