@@ -25,7 +25,7 @@ PREV_IMG = [0] * 576
 inverted = False
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 5
+TIME_TILL_RESET = 120
 paused = True
 
 def display(img) -> None:
@@ -34,7 +34,7 @@ def display(img) -> None:
 
     change_count = 0
     if ((time.time() - PAUSE_TIME) > TIME_TILL_RESET and (not paused)):
-        reload('flip')
+        reload('pause')
         paused = True
 
     for n in range(16 * BOX_NUM):
