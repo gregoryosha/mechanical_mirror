@@ -25,7 +25,7 @@ PREV_IMG = [0] * 576
 inverted = False
 
 PAUSE_TIME = time.time()
-TIME_TILL_RESET = 120
+TIME_TILL_RESET = 60
 paused = True
 
 def display(img) -> None:
