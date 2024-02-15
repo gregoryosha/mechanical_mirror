@@ -41,8 +41,8 @@ def display(img) -> None:
         reload()
 
     elif ((time.time() - PAUSE_TIME) > TIME_HARD_RESET and (not hard_paused)):
-        reload('reset')
         hard_paused = True
+        reload('reset')
 
     for n in range(16 * BOX_NUM):
         if (img[n] != PREV_IMG[n]):
