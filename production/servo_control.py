@@ -97,11 +97,6 @@ def reload(mode: str='null'):
     time.sleep(0.5)
 
     try: 
-        for n in range(BOX_NUM):
-            for j in range(4):
-                for i in range(4):
-                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
-                    time.sleep(0.002)
 
         if (mode == 'reset'):
             GPIO.output(RESET_PIN, True)
@@ -113,7 +108,13 @@ def reload(mode: str='null'):
                 for j in range(4):
                     for i in range(4):
                         servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = IN_ANG
-                        time.sleep(0.003)
+                        time.sleep(0.004)
+
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                    time.sleep(0.002)
         
         
         

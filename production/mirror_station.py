@@ -23,7 +23,7 @@ SER_TIME = time.time()
 FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
 SOFT_RESET_TIME = 3
-HARD_RESET_TIME = 15
+HARD_RESET_TIME = 30
 
 
 # Global variables to calculate FPS
@@ -82,7 +82,7 @@ def pause_check(ser):
             ser.reset_input_buffer()
             FRAME_TIME = SOFT_RESET_TIME
             SER_TIME = time.time()
-        if ser.in_waiting == 6: #Check byte number, 5 for soft, 6 for hard reset
+        elif ser.in_waiting == 6: #Check byte number, 5 for soft, 6 for hard reset
             print(f"Hard reseting...")
             ser.reset_input_buffer()
             FRAME_TIME = HARD_RESET_TIME
