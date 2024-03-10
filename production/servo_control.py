@@ -86,12 +86,12 @@ def reload(mode: str='null'):
         print('Soft Reset')
         ser.write(bytes('00000', 'utf-8')) #Send 5 bytes for soft reset
     elif (mode == 'reset'):
-        print('flipping!')
+        print('Long reset')
         ser.write(bytes('000000', 'utf-8')) #Send 6 bytes for hard reset
-        temp = IN_ANG
-        IN_ANG = OUT_ANG
-        OUT_ANG = temp
-        inverted = not inverted
+        # temp = IN_ANG
+        # IN_ANG = OUT_ANG
+        # OUT_ANG = temp
+        # inverted = not inverted
 
     print('reloading...')
     time.sleep(0.5)
