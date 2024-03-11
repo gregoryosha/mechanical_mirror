@@ -94,7 +94,7 @@ def reload(mode: str='null'):
         # inverted = not inverted
 
     print('reloading...')
-    time.sleep(0.5)
+    time.sleep(1.5)
 
     try: 
 

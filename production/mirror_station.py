@@ -22,7 +22,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 SER_TIME = time.time()
 FRAME_TIME = 0.5
 PREV_IMG = [0] * 576
-SOFT_RESET_TIME = 3
+SOFT_RESET_TIME = 4
 HARD_RESET_TIME = 30
 
 
