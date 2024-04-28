@@ -10,10 +10,7 @@ The Pi 4 is responsible for both processing live video and outputting to servos
 
 ## MediaPipe 
 [Documentation](https://developers.google.com/mediapipe/framework/getting_started/install)
-* Install python six library: `pip3 install --user six`
-* Install Go: `sudo apt install golang-go`
-* Install Bazelisk: `go get github.com/bazelbuild/bazelisk`. Move it to bin: `sudo mv ./go/bin/bazelisk /usr/bin/bazel`
-* Install mediapipe: `git clone https://github.com/google/mediapipe.git`
+* Install `pip3 install mediapipe`
 
 
 ## OpenCV
@@ -26,6 +23,11 @@ OpenCV is installed via mediapipe by running the `mediapipe/setup_opencv.sh` fil
 ## Useful Commands
 Check i2c connections; `i2cdetect -y 1`
 Check USB devices: `dmesg | grep tty`
+
+Controlling a background process: 
+* `systemctl status mirror_station.service`
+* `sudo systemctl enable --now mirror_station.service`
+* creating background file: `sudo systemctl --force --full edit mirror_station.service` 
 
 
 

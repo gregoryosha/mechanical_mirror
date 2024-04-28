@@ -14,12 +14,15 @@ from adafruit_pca9685 import PCA9685
 from adafruit_motor import servo
 
 i2c = busio.I2C(board.SCL, board.SDA)
-# i2c = busio.I2C()
+import RPi.GPIO as GPIO
+
+#Pins
+RESET_PIN = 4
 
 servo_arr = servo.Servo
 
 in_ang = 80
-out_ang = 120
+out_ang = 140
 
 short_sleep = 0.5
 long_sleep = 3
@@ -32,6 +35,9 @@ for n in range(BOX_NUM):
 for n in range(BOX_NUM):
     pca_arr[n].frequency = 50
 servo_arr = servo.Servo
+
+GPIO.setup(RESET_PIN, GPIO.OUT)  # type: ignore
+GPIO.output(RESET_PIN, False)  # type: ignore
 
 
 while True:
@@ -56,9 +62,25 @@ while True:
                         for i in range(4):
                             servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = in_ang
                         time.sleep(0.1)
+                for n in range(BOX_NUM):
+                    for j in range(4):
+                        for i in range(4):
+                            servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                            time.sleep(0.001)
                 break
     else:
-        for i in range(16):
-            for n in range(BOX_NUM):
-                servo_arr(pca_arr[n].channels[i]).angle = int(cmd)
-                time.sleep(0.005)
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = int(cmd)
+                    time.sleep(0.02)
+        
+        for n in range(BOX_NUM):
+            for j in range(4):
+                for i in range(4):
+                    servo_arr(pca_arr[n].channels[i*4 + 3-j]).angle = None
+                    time.sleep(0.005)
+        
+        GPIO.output(RESET_PIN, True)
+        time.sleep(1)
+        GPIO.output(RESET_PIN, False)
